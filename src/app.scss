@@ -1,0 +1,12 @@
+@import "./variables.scss";
+
+body {
+  background-color: $light-background;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: $dark-background;
+    color: $dark-text;
+  }
+}
