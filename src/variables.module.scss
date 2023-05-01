@@ -1,0 +1,14 @@
+@import "./variables.scss";
+
+:export {
+  // body
+  bodyLightBackground: $body-light-background;
+  bodyDarkBackground: $body-dark-background;
+  // navbar
+  lightBackground: $light-background;
+  lightText: $light-text;
+  lightPrimary: $light-primary;
+  darkBackground: $dark-background;
+  darkText: $dark-text;
+  darkPrimary: $dark-primary;
+}
