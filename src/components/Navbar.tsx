@@ -7,10 +7,6 @@ import "./navbar.scss";
 import { ThemeContext, ThemeProvider } from "../theme";
 
 /**
- * - Animations
- *   - Toggle between 2 icons.
- * - Accessibility
- *   - Show me what you know!
  * - Bonus:
  *   - Documentation -  How would you document this component? (eg Storybook)
  *   - Tests - You can create Unit Tests or Visual testing (eg using [Percy in Storybook](https://docs.percy.io/docs/storybook))
@@ -29,25 +25,53 @@ const NavbarContext = React.createContext<{
 type NavbarItemProps = {
   icon: IconDefinition;
   title: string;
-  onClick: (title: string) => void;
+  onSelect: (title: string) => void;
 };
 
-export function NavbarItem({ icon, title, onClick }: NavbarItemProps) {
+export function NavbarItem({ icon, title, onSelect }: NavbarItemProps) {
   const theme = useContext(ThemeContext);
   const { selectedId, setSelected } = useContext(NavbarContext);
 
   const handleClick = () => {
-    setSelected?.(title);
-    onClick(title);
+    // If is already selected, then deselect
+    if (title === selectedId) {
+      setSelected?.("");
+    } else {
+      setSelected?.(title);
+      onSelect(title);
+    }
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    switch (event.key) {
+      case "Enter":
+      case " ":
+        // If is already selected, then deselect
+        if (title === selectedId) {
+          setSelected?.("");
+        } else {
+          setSelected?.(title);
+          onSelect(title);
+        }
+        break;
+      default:
+        break;
+    }
   };
 
   const isSelected = title === selectedId;
 
   return (
-    <div className="navbar-item" onClick={handleClick}>
+    <li
+      tabIndex={0}
+      className="navbar-item"
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
+    >
       <FontAwesomeIcon
         className="navbar-item-icon"
         icon={icon}
+        // TODO: this should be a param
         size="2x"
         color={
           isSelected
@@ -65,11 +89,12 @@ export function NavbarItem({ icon, title, onClick }: NavbarItemProps) {
         />
         <span className="navbar-item-title-text">{title}</span>
       </div>
-    </div>
+    </li>
   );
 }
 
 type NavbarProps = {
+  label: string;
   children?: React.ReactNode;
 };
 
@@ -84,9 +109,11 @@ export function Navbar(props: NavbarProps) {
           setSelected: setSelectedId,
         }}
       >
-        <div role="navigation" className="navbar">
-          {props.children}
-        </div>
+        <nav aria-label={props.label}>
+          <ul role="menubar" className="navbar">
+            {props.children}
+          </ul>
+        </nav>
       </NavbarContext.Provider>
     </ThemeProvider>
   );

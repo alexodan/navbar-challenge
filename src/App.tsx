@@ -14,19 +14,19 @@ function App() {
 
   return (
     <>
-      <Navbar>
-        <NavbarItem icon={faClock} title="Time" onClick={handleItemClicked} />
+      <Navbar label="Nav Menu">
+        <NavbarItem icon={faClock} title="Time" onSelect={handleItemClicked} />
         <NavbarItem
           icon={faFutbol}
           title="Comments"
-          onClick={handleItemClicked}
+          onSelect={handleItemClicked}
         />
         <NavbarItem
           icon={faCompass}
           title="Compass"
-          onClick={handleItemClicked}
+          onSelect={handleItemClicked}
         />
-        <NavbarItem icon={faUser} title="User" onClick={handleItemClicked} />
+        <NavbarItem icon={faUser} title="User" onSelect={handleItemClicked} />
       </Navbar>
     </>
   );
