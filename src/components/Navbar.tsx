@@ -4,6 +4,7 @@ import { faCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import style from "../variables.module.scss";
 import "./navbar.scss";
+import { ThemeContext, ThemeProvider } from "../theme";
 
 /**
  * - Animations
@@ -16,7 +17,6 @@ import "./navbar.scss";
  *   - Consistency - how would you “enforce” the correct usage of icons and colors? (eg Theme)
  *   - Customization: If a Dark/Light theme existed in the app, how would you integrate it with the component?
  */
-
 const NavbarContext = React.createContext<{
   // TODO: (HACK) I made the id to be the title the user passes to the component
   // Basically because I couldn't find a way for each NavbarItem to 'know' their id
@@ -33,6 +33,7 @@ type NavbarItemProps = {
 };
 
 export function NavbarItem({ icon, title, onClick }: NavbarItemProps) {
+  const theme = useContext(ThemeContext);
   const { selectedId, setSelected } = useContext(NavbarContext);
 
   const handleClick = () => {
@@ -48,7 +49,13 @@ export function NavbarItem({ icon, title, onClick }: NavbarItemProps) {
         className="navbar-item-icon"
         icon={icon}
         size="2x"
-        color={isSelected ? style.darkPrimary : style.darkPrimary}
+        color={
+          isSelected
+            ? style.primary
+            : theme?.colorMode === "dark"
+            ? style.lightBackground
+            : style.darkBackground
+        }
       />
       <div className={`navbar-item-title ${isSelected ? "selected" : ""}`}>
         <FontAwesomeIcon
@@ -70,16 +77,18 @@ export function Navbar(props: NavbarProps) {
   const [selectedId, setSelectedId] = useState<string>();
 
   return (
-    <NavbarContext.Provider
-      value={{
-        selectedId,
-        setSelected: setSelectedId,
-      }}
-    >
-      <div role="navigation" className="navbar">
-        {props.children}
-      </div>
-    </NavbarContext.Provider>
+    <ThemeProvider>
+      <NavbarContext.Provider
+        value={{
+          selectedId,
+          setSelected: setSelectedId,
+        }}
+      >
+        <div role="navigation" className="navbar">
+          {props.children}
+        </div>
+      </NavbarContext.Provider>
+    </ThemeProvider>
   );
 }
 
