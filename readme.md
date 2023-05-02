@@ -1,5 +1,7 @@
 # Navbar challenge
 
+Note: Most of the progress is in the `navbar` branch.
+
 This repo contains the solution to this challenge https://www.notion.so/alexdan/Challenge-1-Navbar-62ae547aa708477bbd679c27a829cf6f
 
 The general idea is to have a navbar like the one in this image
