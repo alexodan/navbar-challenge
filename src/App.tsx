@@ -8,8 +8,8 @@ import {
 import "./app.scss";
 
 function App() {
-  const handleItemClicked = (title: string) => {
-    console.log("Item clicked", title);
+  const handleItemClicked = ({ title, id }: { title: string; id?: number }) => {
+    console.log(`Item clicked title ${title} id ${id}`);
   };
 
   return (

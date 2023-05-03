@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { ReactNode, useContext, useState } from "react";
 import { IconDefinition } from "@fortawesome/free-regular-svg-icons";
 import { faCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -14,10 +14,6 @@ import { ThemeContext, ThemeProvider } from "../theme";
  *   - Customization: If a Dark/Light theme existed in the app, how would you integrate it with the component?
  */
 const NavbarContext = React.createContext<{
-  // TODO: (HACK) I made the id to be the title the user passes to the component
-  // Basically because I couldn't find a way for each NavbarItem to 'know' their id
-  // I guess I could make the user pass an 'id' prop as well that will need to be unique
-  id?: string;
   selectedId?: string;
   setSelected?: (id: string) => void;
 }>({});
@@ -25,10 +21,11 @@ const NavbarContext = React.createContext<{
 type NavbarItemProps = {
   icon: IconDefinition;
   title: string;
-  onSelect: (title: string) => void;
+  onSelect: ({ title, id }: { title: string; id?: number }) => void;
+  id?: number; // TODO: find out how not to expose this prop
 };
 
-export function NavbarItem({ icon, title, onSelect }: NavbarItemProps) {
+export function NavbarItem({ icon, title, onSelect, id }: NavbarItemProps) {
   const theme = useContext(ThemeContext);
   const { selectedId, setSelected } = useContext(NavbarContext);
 
@@ -38,7 +35,7 @@ export function NavbarItem({ icon, title, onSelect }: NavbarItemProps) {
       setSelected?.("");
     } else {
       setSelected?.(title);
-      onSelect(title);
+      onSelect({ title, id });
     }
   };
 
@@ -51,7 +48,7 @@ export function NavbarItem({ icon, title, onSelect }: NavbarItemProps) {
           setSelected?.("");
         } else {
           setSelected?.(title);
-          onSelect(title);
+          onSelect({ title, id });
         }
         break;
       default:
@@ -82,11 +79,6 @@ export function NavbarItem({ icon, title, onSelect }: NavbarItemProps) {
         }
       />
       <div className={`navbar-item-title ${isSelected ? "selected" : ""}`}>
-        <FontAwesomeIcon
-          icon={faCircle}
-          className="navbar-item-selected-icon"
-          color="#4EB3DB"
-        />
         <span className="navbar-item-title-text">{title}</span>
       </div>
     </li>
@@ -95,7 +87,7 @@ export function NavbarItem({ icon, title, onSelect }: NavbarItemProps) {
 
 type NavbarProps = {
   label: string;
-  children?: React.ReactNode;
+  children: React.ReactNode;
 };
 
 export function Navbar(props: NavbarProps) {
@@ -111,7 +103,27 @@ export function Navbar(props: NavbarProps) {
       >
         <nav aria-label={props.label}>
           <ul role="menubar" className="navbar">
-            {props.children}
+            {React.Children.map(props.children, (child: ReactNode, index) => {
+              if (
+                !child ||
+                !React.isValidElement(child) ||
+                typeof child === "string" ||
+                typeof child.type === "string" ||
+                child.type.name !== "NavbarItem"
+              ) {
+                throw Error(
+                  "Only NavbarItem is allowed as child component of Navbar"
+                );
+              }
+              return React.cloneElement(child as React.ReactElement, {
+                id: index,
+              });
+            })}
+            <FontAwesomeIcon
+              icon={faCircle}
+              className="navbar-item-selected-icon"
+              color="#4EB3DB"
+            />
           </ul>
         </nav>
       </NavbarContext.Provider>

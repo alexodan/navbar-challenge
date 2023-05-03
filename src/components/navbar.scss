@@ -28,14 +28,6 @@
   width: 96px;
 }
 
-.navbar-item-selected-icon {
-  display: none;
-}
-
-.navbar-item-title.selected .navbar-item-selected-icon {
-  display: block;
-}
-
 .navbar-item-title.selected .navbar-item-title-text {
   animation: slide-away 2000ms;
   display: none;
