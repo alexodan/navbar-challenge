@@ -116,10 +116,15 @@ export function Navbar(props: NavbarProps) {
 
   useLayoutEffect(() => {
     const domMenuItem = items[selectedId!]?.current;
-    const domDotIcon = selectedIndicatorRef.current;
-    if (domMenuItem && domDotIcon) {
-      domDotIcon.style.left = `${domMenuItem.offsetLeft}px`;
-      domDotIcon.style.top = `${domMenuItem.offsetHeight}px`;
+    const domSelectedIndicator = selectedIndicatorRef.current;
+    if (domMenuItem && domSelectedIndicator) {
+      // TODO: animate translation of the item selected indicator icon (blue dot)
+      const currentLeft = domSelectedIndicator.style.left;
+      const nextLeft = domMenuItem.offsetLeft;
+      // TODO: remove hardcoded numbers
+      domSelectedIndicator.style.left = `${nextLeft + 48 - 8}px`;
+      domSelectedIndicator.style.top = `${domMenuItem.offsetHeight - 12}px`;
+      domSelectedIndicator.style.visibility = "visible";
     }
   }, [items, selectedId]);
 
