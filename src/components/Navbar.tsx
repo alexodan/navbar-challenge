@@ -1,4 +1,12 @@
-import React, { ReactNode, useContext, useState } from "react";
+import React, {
+  ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { IconDefinition } from "@fortawesome/free-regular-svg-icons";
 import { faCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -14,8 +22,9 @@ import { ThemeContext, ThemeProvider } from "../theme";
  *   - Customization: If a Dark/Light theme existed in the app, how would you integrate it with the component?
  */
 const NavbarContext = React.createContext<{
-  selectedId?: string;
-  setSelected?: (id: string) => void;
+  selectedId?: number;
+  setSelectedId?: (id?: number) => void;
+  registerItem?: (item: React.MutableRefObject<any>) => void;
 }>({});
 
 type NavbarItemProps = {
@@ -27,14 +36,15 @@ type NavbarItemProps = {
 
 export function NavbarItem({ icon, title, onSelect, id }: NavbarItemProps) {
   const theme = useContext(ThemeContext);
-  const { selectedId, setSelected } = useContext(NavbarContext);
+  const { selectedId, setSelectedId, registerItem } = useContext(NavbarContext);
+  const itemRef = useRef(null);
 
   const handleClick = () => {
     // If is already selected, then deselect
-    if (title === selectedId) {
-      setSelected?.("");
+    if (id === selectedId) {
+      setSelectedId?.(undefined);
     } else {
-      setSelected?.(title);
+      setSelectedId?.(id);
       onSelect({ title, id });
     }
   };
@@ -44,10 +54,10 @@ export function NavbarItem({ icon, title, onSelect, id }: NavbarItemProps) {
       case "Enter":
       case " ":
         // If is already selected, then deselect
-        if (title === selectedId) {
-          setSelected?.("");
+        if (id === selectedId) {
+          setSelectedId?.(undefined);
         } else {
-          setSelected?.(title);
+          setSelectedId?.(id);
           onSelect({ title, id });
         }
         break;
@@ -56,7 +66,13 @@ export function NavbarItem({ icon, title, onSelect, id }: NavbarItemProps) {
     }
   };
 
-  const isSelected = title === selectedId;
+  console.log("Just checking i'm not infinite looping over here...");
+
+  useEffect(() => {
+    registerItem?.(itemRef);
+  }, [registerItem]);
+
+  const isSelected = id === selectedId;
 
   return (
     <li
@@ -64,6 +80,7 @@ export function NavbarItem({ icon, title, onSelect, id }: NavbarItemProps) {
       className="navbar-item"
       onClick={handleClick}
       onKeyDown={handleKeyDown}
+      ref={itemRef}
     >
       <FontAwesomeIcon
         className="navbar-item-icon"
@@ -91,14 +108,33 @@ type NavbarProps = {
 };
 
 export function Navbar(props: NavbarProps) {
-  const [selectedId, setSelectedId] = useState<string>();
+  const [selectedId, setSelectedId] = useState<number>();
+  const [items, setItems] = useState<React.MutableRefObject<HTMLLIElement>[]>(
+    []
+  );
+  const selectedIndicatorRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    const domMenuItem = items[selectedId!]?.current;
+    const domDotIcon = selectedIndicatorRef.current;
+    if (domMenuItem && domDotIcon) {
+      domDotIcon.style.left = `${domMenuItem.offsetLeft}px`;
+      domDotIcon.style.top = `${domMenuItem.offsetHeight}px`;
+    }
+  }, [items, selectedId]);
+
+  const registerItem = useCallback((item: React.MutableRefObject<any>) => {
+    console.log("Registering...");
+    setItems((prevItems) => [...prevItems, item]);
+  }, []);
 
   return (
     <ThemeProvider>
       <NavbarContext.Provider
         value={{
           selectedId,
-          setSelected: setSelectedId,
+          setSelectedId,
+          registerItem,
         }}
       >
         <nav aria-label={props.label}>
@@ -119,11 +155,12 @@ export function Navbar(props: NavbarProps) {
                 id: index,
               });
             })}
-            <FontAwesomeIcon
-              icon={faCircle}
+            <div
+              ref={selectedIndicatorRef}
               className="navbar-item-selected-icon"
-              color="#4EB3DB"
-            />
+            >
+              <FontAwesomeIcon icon={faCircle} color="#4EB3DB" />
+            </div>
           </ul>
         </nav>
       </NavbarContext.Provider>

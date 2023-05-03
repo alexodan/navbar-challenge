@@ -9,6 +9,7 @@
   justify-content: space-around;
   max-width: 600px;
   padding: 12px;
+  position: relative;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -28,9 +29,15 @@
   width: 96px;
 }
 
+.navbar-item-selected-icon {
+  // visibility: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
 .navbar-item-title.selected .navbar-item-title-text {
-  animation: slide-away 2000ms;
-  display: none;
+  visibility: hidden;
 }
 
 .navbar-item-title {
