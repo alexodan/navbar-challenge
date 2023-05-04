@@ -34,6 +34,11 @@
   position: absolute;
   top: 0;
   left: 0;
+  transition: transform 0.3s ease-in-out;
+}
+
+.navbar-item-selected-icon.animate {
+  transform: translateX(var(--translate-x-value));
 }
 
 .navbar-item-title.selected .navbar-item-title-text {

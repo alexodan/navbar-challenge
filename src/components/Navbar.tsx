@@ -114,17 +114,30 @@ export function Navbar(props: NavbarProps) {
   );
   const selectedIndicatorRef = useRef<HTMLDivElement>(null);
 
+  // TODO: refactor this monstrosity (maybe ask Sandrina on good practice to do this)
   useLayoutEffect(() => {
     const domMenuItem = items[selectedId!]?.current;
     const domSelectedIndicator = selectedIndicatorRef.current;
     if (domMenuItem && domSelectedIndicator) {
-      // TODO: animate translation of the item selected indicator icon (blue dot)
-      const currentLeft = domSelectedIndicator.style.left;
-      const nextLeft = domMenuItem.offsetLeft;
-      // TODO: remove hardcoded numbers
-      domSelectedIndicator.style.left = `${nextLeft + 48 - 8}px`;
-      domSelectedIndicator.style.top = `${domMenuItem.offsetHeight - 12}px`;
-      domSelectedIndicator.style.visibility = "visible";
+      if (!domSelectedIndicator.style.visibility) {
+        domSelectedIndicator.style.top = `${domMenuItem.offsetHeight - 12}px`;
+        domSelectedIndicator.style.left = `${
+          domMenuItem.offsetLeft + 48 - 8
+        }px`;
+        domSelectedIndicator.style.visibility = "visible";
+      } else {
+        const currentLeft = +domSelectedIndicator.style.left.substring(
+          0,
+          domSelectedIndicator.style.left.length - 2
+        );
+        const nextLeft = domMenuItem.offsetLeft;
+        const movement = nextLeft - currentLeft;
+        domSelectedIndicator.style.setProperty(
+          "--translate-x-value",
+          `${movement + 48 - 8}px`
+        );
+        domSelectedIndicator.classList.add("animate");
+      }
     }
   }, [items, selectedId]);
 
@@ -160,12 +173,14 @@ export function Navbar(props: NavbarProps) {
                 id: index,
               });
             })}
-            <div
-              ref={selectedIndicatorRef}
-              className="navbar-item-selected-icon"
-            >
-              <FontAwesomeIcon icon={faCircle} color="#4EB3DB" />
-            </div>
+            {selectedId !== undefined && (
+              <div
+                ref={selectedIndicatorRef}
+                className="navbar-item-selected-icon"
+              >
+                <FontAwesomeIcon size="xs" icon={faCircle} color="#4EB3DB" />
+              </div>
+            )}
           </ul>
         </nav>
       </NavbarContext.Provider>
