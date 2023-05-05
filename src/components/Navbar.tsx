@@ -24,7 +24,7 @@ import { ThemeContext, ThemeProvider } from "../theme";
 const NavbarContext = React.createContext<{
   selectedId?: number;
   setSelectedId?: (id?: number) => void;
-  registerItem?: (item: React.MutableRefObject<any>) => void;
+  registerItem?: (item: React.RefObject<HTMLLIElement>) => void;
 }>({});
 
 type NavbarItemProps = {
@@ -37,7 +37,7 @@ type NavbarItemProps = {
 export function NavbarItem({ icon, title, onSelect, id }: NavbarItemProps) {
   const theme = useContext(ThemeContext);
   const { selectedId, setSelectedId, registerItem } = useContext(NavbarContext);
-  const itemRef = useRef(null);
+  const itemRef = useRef<HTMLLIElement>(null);
 
   const handleClick = () => {
     // If is already selected, then deselect
@@ -85,8 +85,7 @@ export function NavbarItem({ icon, title, onSelect, id }: NavbarItemProps) {
       <FontAwesomeIcon
         className="navbar-item-icon"
         icon={icon}
-        // TODO: this should be a param
-        size="2x"
+        size="2x" // this should be a param
         color={
           isSelected
             ? style.primary
@@ -109,9 +108,7 @@ type NavbarProps = {
 
 export function Navbar(props: NavbarProps) {
   const [selectedId, setSelectedId] = useState<number>();
-  const [items, setItems] = useState<React.MutableRefObject<HTMLLIElement>[]>(
-    []
-  );
+  const [items, setItems] = useState<React.RefObject<HTMLLIElement>[]>([]);
   const selectedIndicatorRef = useRef<HTMLDivElement>(null);
 
   // TODO: refactor this monstrosity (maybe ask Sandrina on good practice to do this)
@@ -122,7 +119,7 @@ export function Navbar(props: NavbarProps) {
       if (!domSelectedIndicator.style.visibility) {
         domSelectedIndicator.style.top = `${domMenuItem.offsetHeight - 12}px`;
         domSelectedIndicator.style.left = `${
-          domMenuItem.offsetLeft + 48 - 8
+          domMenuItem.offsetLeft + 48 - 8 // half the size of the NavbarItem width and half the size of circle icon
         }px`;
         domSelectedIndicator.style.visibility = "visible";
       } else {
@@ -141,8 +138,7 @@ export function Navbar(props: NavbarProps) {
     }
   }, [items, selectedId]);
 
-  const registerItem = useCallback((item: React.MutableRefObject<any>) => {
-    console.log("Registering...");
+  const registerItem = useCallback((item: React.RefObject<HTMLLIElement>) => {
     setItems((prevItems) => [...prevItems, item]);
   }, []);
 
