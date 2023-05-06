@@ -1,5 +1,4 @@
 import React, {
-  ReactNode,
   useCallback,
   useContext,
   useEffect,
@@ -13,14 +12,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import style from "../variables.module.scss";
 import "./navbar.scss";
 import { ThemeContext, ThemeProvider } from "../theme";
+import { isNavbarItem } from "../utils";
 
-/**
- * - Bonus:
- *   - Documentation -  How would you document this component? (eg Storybook)
- *   - Tests - You can create Unit Tests or Visual testing (eg using [Percy in Storybook](https://docs.percy.io/docs/storybook))
- *   - Consistency - how would you “enforce” the correct usage of icons and colors? (eg Theme)
- *   - Customization: If a Dark/Light theme existed in the app, how would you integrate it with the component?
- */
 const NavbarContext = React.createContext<{
   selectedId?: number;
   setSelectedId?: (id?: number) => void;
@@ -111,30 +104,39 @@ export function Navbar(props: NavbarProps) {
   const [items, setItems] = useState<React.RefObject<HTMLLIElement>[]>([]);
   const selectedIndicatorRef = useRef<HTMLDivElement>(null);
 
-  // TODO: refactor this monstrosity (maybe ask Sandrina on good practice to do this)
+  // TODO: refactor this monstrosity (maybe ask Sandrina to give some tips)
+  const animateWithCss = (
+    domMenuItem: HTMLLIElement,
+    domSelectedIndicator: HTMLDivElement
+  ) => {
+    // First time an item is selected, the icon appears
+    if (!domSelectedIndicator.style.visibility) {
+      domSelectedIndicator.style.top = `${domMenuItem.offsetHeight - 12}px`;
+      domSelectedIndicator.style.left = `${
+        // center positioning the icon
+        domMenuItem.offsetLeft +
+        domMenuItem.clientWidth / 2 -
+        domSelectedIndicator.clientWidth / 2
+      }px`;
+      domSelectedIndicator.style.visibility = "visible";
+    } else {
+      // If an item is already selected, translate the icon
+      const currentPosition = domSelectedIndicator.offsetLeft;
+      const nextLeft = domMenuItem.offsetLeft;
+      const movement = nextLeft - currentPosition;
+      domSelectedIndicator.style.setProperty(
+        "--translate-x-value",
+        `${movement + 48 - 8}px`
+      );
+      domSelectedIndicator.classList.add("animate");
+    }
+  };
+
   useLayoutEffect(() => {
     const domMenuItem = items[selectedId!]?.current;
     const domSelectedIndicator = selectedIndicatorRef.current;
     if (domMenuItem && domSelectedIndicator) {
-      if (!domSelectedIndicator.style.visibility) {
-        domSelectedIndicator.style.top = `${domMenuItem.offsetHeight - 12}px`;
-        domSelectedIndicator.style.left = `${
-          domMenuItem.offsetLeft + 48 - 8 // half the size of the NavbarItem width and half the size of circle icon
-        }px`;
-        domSelectedIndicator.style.visibility = "visible";
-      } else {
-        const currentLeft = +domSelectedIndicator.style.left.substring(
-          0,
-          domSelectedIndicator.style.left.length - 2
-        );
-        const nextLeft = domMenuItem.offsetLeft;
-        const movement = nextLeft - currentLeft;
-        domSelectedIndicator.style.setProperty(
-          "--translate-x-value",
-          `${movement + 48 - 8}px`
-        );
-        domSelectedIndicator.classList.add("animate");
-      }
+      animateWithCss(domMenuItem, domSelectedIndicator);
     }
   }, [items, selectedId]);
 
@@ -153,17 +155,9 @@ export function Navbar(props: NavbarProps) {
       >
         <nav aria-label={props.label}>
           <ul role="menubar" className="navbar">
-            {React.Children.map(props.children, (child: ReactNode, index) => {
-              if (
-                !child ||
-                !React.isValidElement(child) ||
-                typeof child === "string" ||
-                typeof child.type === "string" ||
-                child.type.name !== "NavbarItem"
-              ) {
-                throw Error(
-                  "Only NavbarItem is allowed as child component of Navbar"
-                );
+            {React.Children.map(props.children, (child, index) => {
+              if (isNavbarItem(child)) {
+                throw Error("Only NavbarItem allowed as child of Navbar");
               }
               return React.cloneElement(child as React.ReactElement, {
                 id: index,
@@ -172,7 +166,7 @@ export function Navbar(props: NavbarProps) {
             {selectedId !== undefined && (
               <div
                 ref={selectedIndicatorRef}
-                className="navbar-item-selected-icon"
+                className="navbar-item-selected-icon hidden"
               >
                 <FontAwesomeIcon size="xs" icon={faCircle} color="#4EB3DB" />
               </div>
