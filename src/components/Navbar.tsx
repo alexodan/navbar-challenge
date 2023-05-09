@@ -59,8 +59,6 @@ export function NavbarItem({ icon, title, onSelect, id }: NavbarItemProps) {
     }
   };
 
-  console.log("Just checking i'm not infinite looping over here...");
-
   useEffect(() => {
     registerItem?.(itemRef);
   }, [registerItem]);
@@ -120,13 +118,17 @@ export function Navbar(props: NavbarProps) {
       }px`;
       domSelectedIndicator.style.visibility = "visible";
     } else {
-      // If an item is already selected, translate the icon
+      // If an item is already selected, move the icon to next position
       const currentPosition = domSelectedIndicator.offsetLeft;
       const nextLeft = domMenuItem.offsetLeft;
       const movement = nextLeft - currentPosition;
       domSelectedIndicator.style.setProperty(
         "--translate-x-value",
-        `${movement + 48 - 8}px`
+        `${
+          movement +
+          domMenuItem.clientWidth / 2 -
+          domSelectedIndicator.clientWidth / 2
+        }px`
       );
       domSelectedIndicator.classList.add("animate");
     }

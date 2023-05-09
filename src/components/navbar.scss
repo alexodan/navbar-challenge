@@ -19,6 +19,8 @@
   }
 }
 
+// --- NavbarItem styles ---
+
 .navbar-item {
   align-items: center;
   cursor: pointer;
@@ -40,8 +42,14 @@
   }
 }
 
-.navbar-item-title.selected .navbar-item-title-text {
-  visibility: hidden;
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.navbar-item-title.selected {
+  animation: fadeOut 0.3s;
+  opacity: 0;
 }
 
 .navbar-item-title {
