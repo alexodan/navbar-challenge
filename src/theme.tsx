@@ -1,4 +1,7 @@
-// https://www.joshwcomeau.com/react/dark-mode/
+/**
+ * This code is extracted from here https://www.joshwcomeau.com/react/dark-mode/
+ * I deleted the parts I'm not using though, since I just want the user theme.
+ */
 import React from "react";
 
 type Props = {
@@ -8,7 +11,6 @@ type Props = {
 export const ThemeContext = React.createContext<
   | {
       colorMode: string;
-      setColorMode: (colorMode: "dark" | "light") => void;
     }
   | undefined
 >(undefined);
@@ -25,16 +27,10 @@ function getInitialColorMode() {
 }
 
 export const ThemeProvider = ({ children }: Props) => {
-  const [colorMode, rawSetColorMode] = React.useState(getInitialColorMode);
-
-  const setColorMode = (value: "light" | "dark") => {
-    rawSetColorMode(value);
-    // Persist it on update
-    window.localStorage.setItem("color-mode", value);
-  };
+  const [colorMode] = React.useState(getInitialColorMode);
 
   return (
-    <ThemeContext.Provider value={{ colorMode, setColorMode }}>
+    <ThemeContext.Provider value={{ colorMode }}>
       {children}
     </ThemeContext.Provider>
   );
