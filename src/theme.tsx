@@ -18,6 +18,11 @@ export const ThemeContext = React.createContext<
 function getInitialColorMode() {
   const mql = window.matchMedia("(prefers-color-scheme: dark)");
   const hasMediaQueryPreference = typeof mql.matches === "boolean";
+
+  mql.addEventListener("change", () => {
+    // TODO: add code to toggle color in theme context
+  });
+
   if (hasMediaQueryPreference) {
     return mql.matches ? "dark" : "light";
   }
@@ -27,7 +32,7 @@ function getInitialColorMode() {
 }
 
 export const ThemeProvider = ({ children }: Props) => {
-  const [colorMode] = React.useState(getInitialColorMode);
+  const [colorMode] = React.useState(getInitialColorMode());
 
   return (
     <ThemeContext.Provider value={{ colorMode }}>

@@ -9,15 +9,18 @@ import React, {
 import { IconDefinition } from "@fortawesome/free-regular-svg-icons";
 import { faCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import style from "../variables.module.scss";
+import style from "../../variables.module.scss";
 import "./navbar.scss";
-import { ThemeContext, ThemeProvider } from "../theme";
-import { isNavbarItem } from "../utils";
+import { ThemeContext, ThemeProvider } from "../../theme";
+import { isNavbarItem } from "./Navbar.utils";
+import { isDev } from "../../utils";
 
 const NavbarContext = React.createContext<{
+  items?: React.RefObject<HTMLLIElement>[];
   selectedId?: number;
   setSelectedId?: (id?: number) => void;
   registerItem?: (item: React.RefObject<HTMLLIElement>) => void;
+  unRegisterItem?: (item: React.RefObject<HTMLLIElement>) => void;
 }>({});
 
 type NavbarItemProps = {
@@ -29,7 +32,8 @@ type NavbarItemProps = {
 
 export function NavbarItem({ icon, title, onSelect, id }: NavbarItemProps) {
   const theme = useContext(ThemeContext);
-  const { selectedId, setSelectedId, registerItem } = useContext(NavbarContext);
+  const { selectedId, setSelectedId, registerItem, unRegisterItem } =
+    useContext(NavbarContext);
   const itemRef = useRef<HTMLLIElement>(null);
 
   const handleClick = () => {
@@ -61,7 +65,8 @@ export function NavbarItem({ icon, title, onSelect, id }: NavbarItemProps) {
 
   useEffect(() => {
     registerItem?.(itemRef);
-  }, [registerItem]);
+    return () => unRegisterItem?.(itemRef);
+  }, [registerItem, unRegisterItem]);
 
   const isSelected = id === selectedId;
 
@@ -103,36 +108,36 @@ export function Navbar(props: NavbarProps) {
   const selectedIndicatorRef = useRef<HTMLDivElement>(null);
 
   // TODO: refactor this monstrosity (maybe ask Sandrina to give some tips)
-  const animateWithCss = (
-    domMenuItem: HTMLLIElement,
-    domSelectedIndicator: HTMLDivElement
-  ) => {
-    // First time an item is selected, the icon appears
-    if (!domSelectedIndicator.style.visibility) {
-      domSelectedIndicator.style.top = `${domMenuItem.offsetHeight - 12}px`;
-      domSelectedIndicator.style.left = `${
-        // center positioning the icon
-        domMenuItem.offsetLeft +
-        domMenuItem.clientWidth / 2 -
-        domSelectedIndicator.clientWidth / 2
-      }px`;
-      domSelectedIndicator.style.visibility = "visible";
-    } else {
-      // If an item is already selected, move the icon to next position
-      const currentPosition = domSelectedIndicator.offsetLeft;
-      const nextLeft = domMenuItem.offsetLeft;
-      const movement = nextLeft - currentPosition;
-      domSelectedIndicator.style.setProperty(
-        "--translate-x-value",
-        `${
-          movement +
+  const animateWithCss = useCallback(
+    (domMenuItem: HTMLLIElement, domSelectedIndicator: HTMLDivElement) => {
+      // First time an item is selected, the icon appears
+      if (!domSelectedIndicator.style.visibility) {
+        domSelectedIndicator.style.top = `${domMenuItem.offsetHeight - 12}px`;
+        domSelectedIndicator.style.left = `${
+          // center positioning the icon
+          domMenuItem.offsetLeft +
           domMenuItem.clientWidth / 2 -
           domSelectedIndicator.clientWidth / 2
-        }px`
-      );
-      domSelectedIndicator.classList.add("animate");
-    }
-  };
+        }px`;
+        domSelectedIndicator.style.visibility = "visible";
+      } else {
+        // If an item is already selected, move the icon to next position
+        const currentPosition = domSelectedIndicator.offsetLeft;
+        const nextLeft = domMenuItem.offsetLeft;
+        const movement = nextLeft - currentPosition;
+        domSelectedIndicator.style.setProperty(
+          "--translate-x-value",
+          `${
+            movement +
+            domMenuItem.clientWidth / 2 -
+            domSelectedIndicator.clientWidth / 2
+          }px`
+        );
+        domSelectedIndicator.classList.add("animate");
+      }
+    },
+    []
+  );
 
   useLayoutEffect(() => {
     const domMenuItem = items[selectedId!]?.current;
@@ -140,40 +145,56 @@ export function Navbar(props: NavbarProps) {
     if (domMenuItem && domSelectedIndicator) {
       animateWithCss(domMenuItem, domSelectedIndicator);
     }
-  }, [items, selectedId]);
+  }, [items, selectedId, animateWithCss]);
 
   const registerItem = useCallback((item: React.RefObject<HTMLLIElement>) => {
-    setItems((prevItems) => [...prevItems, item]);
+    setItems((prevItems) => {
+      if (!prevItems.includes(item)) {
+        return [...prevItems, item];
+      }
+      return prevItems;
+    });
+  }, []);
+
+  const unRegisterItem = useCallback((item: React.RefObject<HTMLLIElement>) => {
+    setItems((prevItems) => {
+      if (prevItems.includes(item)) {
+        return prevItems.filter((i) => i !== item);
+      }
+      return prevItems;
+    });
   }, []);
 
   return (
     <ThemeProvider>
       <NavbarContext.Provider
         value={{
+          items,
           selectedId,
           setSelectedId,
           registerItem,
+          unRegisterItem,
         }}
       >
-        <nav aria-label={props.label}>
-          <ul role="menubar" className="navbar">
+        <nav aria-label={props.label} className="navbar">
+          <ul role="menubar" className="navbar-list">
             {React.Children.map(props.children, (child, index) => {
-              if (isNavbarItem(child)) {
+              if (isDev() && !isNavbarItem(child)) {
                 throw Error("Only NavbarItem allowed as child of Navbar");
               }
               return React.cloneElement(child as React.ReactElement, {
                 id: index,
               });
             })}
-            {selectedId !== undefined && (
-              <div
-                ref={selectedIndicatorRef}
-                className="navbar-item-selected-icon hidden"
-              >
-                <FontAwesomeIcon size="xs" icon={faCircle} color="#4EB3DB" />
-              </div>
-            )}
           </ul>
+          {selectedId !== undefined && (
+            <div
+              ref={selectedIndicatorRef}
+              className="navbar-item-selected-icon hidden"
+            >
+              <FontAwesomeIcon size="xs" icon={faCircle} color="#4EB3DB" />
+            </div>
+          )}
         </nav>
       </NavbarContext.Provider>
     </ThemeProvider>

@@ -1,6 +1,10 @@
-@import "../variables.scss";
+@import "../../variables.scss";
 
 .navbar {
+  position: relative;
+}
+
+.navbar-list {
   background-color: $light-background;
   border-radius: 10px;
   color: $light-text;
@@ -13,7 +17,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  .navbar {
+  .navbar-list {
     background-color: $dark-background;
     color: $dark-text;
   }
