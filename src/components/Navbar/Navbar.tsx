@@ -24,20 +24,13 @@ const NavbarContext = React.createContext<{
 }>({});
 
 type NavbarItemProps = {
-  defaultSelected?: boolean;
   icon: IconDefinition;
   title: string;
   onSelect: ({ title, id }: { title: string; id?: number }) => void;
   id?: number; // TODO: find out how not to expose this prop
 };
 
-export function NavbarItem({
-  defaultSelected,
-  icon,
-  title,
-  onSelect,
-  id,
-}: NavbarItemProps) {
+export function NavbarItem({ icon, title, onSelect, id }: NavbarItemProps) {
   const theme = useContext(ThemeContext);
   const { selectedId, setSelectedId, registerItem, unRegisterItem } =
     useContext(NavbarContext);
@@ -71,12 +64,9 @@ export function NavbarItem({
   };
 
   useEffect(() => {
-    if (defaultSelected) {
-      setSelectedId?.(id);
-    }
     registerItem?.(itemRef);
     return () => unRegisterItem?.(itemRef);
-  }, [defaultSelected, setSelectedId, id, registerItem, unRegisterItem]);
+  }, [setSelectedId, id, registerItem, unRegisterItem]);
 
   const isSelected = id === selectedId;
 
@@ -110,9 +100,10 @@ export function NavbarItem({
 type NavbarProps = {
   label: string;
   children: React.ReactNode;
+  defaultSelected?: number;
 };
 
-export function Navbar(props: NavbarProps) {
+export function Navbar({ label, children, defaultSelected }: NavbarProps) {
   const [selectedId, setSelectedId] = useState<number>();
   const [items, setItems] = useState<React.RefObject<HTMLLIElement>[]>([]);
   const selectedIndicatorRef = useRef<HTMLDivElement>(null);
@@ -136,12 +127,17 @@ export function Navbar(props: NavbarProps) {
 
   const unRegisterItem = useCallback((item: React.RefObject<HTMLLIElement>) => {
     setItems((prevItems) => {
-      if (prevItems.includes(item)) {
-        return prevItems.filter((i) => i !== item);
-      }
-      return prevItems;
+      // Note: i was between putting this logic here or handle it in useDotAnimation
+      setSelectedId((prevId) => (prevItems.length - 1 === prevId ? 0 : prevId));
+      return prevItems.filter((i) => i !== item);
     });
   }, []);
+
+  useEffect(() => {
+    if (defaultSelected !== undefined && selectedId === undefined) {
+      setSelectedId(defaultSelected);
+    }
+  }, [selectedId, items, defaultSelected]);
 
   return (
     <ThemeProvider>
@@ -154,9 +150,9 @@ export function Navbar(props: NavbarProps) {
           unRegisterItem,
         }}
       >
-        <nav aria-label={props.label} className="navbar">
+        <nav aria-label={label} className="navbar">
           <ul ref={listRef} role="menubar" className="navbar-list">
-            {React.Children.map(props.children, (child, index) => {
+            {React.Children.map(children, (child, index) => {
               if (isDev() && !isNavbarItem(child)) {
                 throw Error("Only NavbarItem allowed as child of Navbar");
               }

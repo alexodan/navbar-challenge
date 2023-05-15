@@ -17,7 +17,6 @@ export default function useDotAnimation({
   if (!listRef.current || selectedId === undefined) {
     return {};
   }
-
   const itemWidth = listRef.current.clientWidth / items.length;
   const dotStyles = {
     visibility: selectedId !== undefined ? "visible" : "hidden",
