@@ -2,18 +2,18 @@ import React, {
   useCallback,
   useContext,
   useEffect,
-  useLayoutEffect,
   useRef,
   useState,
 } from "react";
 import { IconDefinition } from "@fortawesome/free-regular-svg-icons";
 import { faCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import style from "../../variables.module.scss";
-import "./navbar.scss";
 import { ThemeContext, ThemeProvider } from "../../theme";
 import { isNavbarItem } from "./Navbar.utils";
 import { isDev } from "../../utils";
+import useDotAnimation from "./hooks";
+import style from "../../variables.module.scss";
+import "./navbar.scss";
 
 const NavbarContext = React.createContext<{
   items?: React.RefObject<HTMLLIElement>[];
@@ -24,13 +24,20 @@ const NavbarContext = React.createContext<{
 }>({});
 
 type NavbarItemProps = {
+  defaultSelected?: boolean;
   icon: IconDefinition;
   title: string;
   onSelect: ({ title, id }: { title: string; id?: number }) => void;
   id?: number; // TODO: find out how not to expose this prop
 };
 
-export function NavbarItem({ icon, title, onSelect, id }: NavbarItemProps) {
+export function NavbarItem({
+  defaultSelected,
+  icon,
+  title,
+  onSelect,
+  id,
+}: NavbarItemProps) {
   const theme = useContext(ThemeContext);
   const { selectedId, setSelectedId, registerItem, unRegisterItem } =
     useContext(NavbarContext);
@@ -64,9 +71,12 @@ export function NavbarItem({ icon, title, onSelect, id }: NavbarItemProps) {
   };
 
   useEffect(() => {
+    if (defaultSelected) {
+      setSelectedId?.(id);
+    }
     registerItem?.(itemRef);
     return () => unRegisterItem?.(itemRef);
-  }, [registerItem, unRegisterItem]);
+  }, [defaultSelected, setSelectedId, id, registerItem, unRegisterItem]);
 
   const isSelected = id === selectedId;
 
@@ -106,46 +116,14 @@ export function Navbar(props: NavbarProps) {
   const [selectedId, setSelectedId] = useState<number>();
   const [items, setItems] = useState<React.RefObject<HTMLLIElement>[]>([]);
   const selectedIndicatorRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
 
-  // TODO: refactor this monstrosity (maybe ask Sandrina to give some tips)
-  const animateWithCss = useCallback(
-    (domMenuItem: HTMLLIElement, domSelectedIndicator: HTMLDivElement) => {
-      // First time an item is selected, the icon appears
-      if (!domSelectedIndicator.style.visibility) {
-        domSelectedIndicator.style.top = `${domMenuItem.offsetHeight - 12}px`;
-        domSelectedIndicator.style.left = `${
-          // center positioning the icon
-          domMenuItem.offsetLeft +
-          domMenuItem.clientWidth / 2 -
-          domSelectedIndicator.clientWidth / 2
-        }px`;
-        domSelectedIndicator.style.visibility = "visible";
-      } else {
-        // If an item is already selected, move the icon to next position
-        const currentPosition = domSelectedIndicator.offsetLeft;
-        const nextLeft = domMenuItem.offsetLeft;
-        const movement = nextLeft - currentPosition;
-        domSelectedIndicator.style.setProperty(
-          "--translate-x-value",
-          `${
-            movement +
-            domMenuItem.clientWidth / 2 -
-            domSelectedIndicator.clientWidth / 2
-          }px`
-        );
-        domSelectedIndicator.classList.add("animate");
-      }
-    },
-    []
-  );
-
-  useLayoutEffect(() => {
-    const domMenuItem = items[selectedId!]?.current;
-    const domSelectedIndicator = selectedIndicatorRef.current;
-    if (domMenuItem && domSelectedIndicator) {
-      animateWithCss(domMenuItem, domSelectedIndicator);
-    }
-  }, [items, selectedId, animateWithCss]);
+  const dotStyles = useDotAnimation({
+    items,
+    selectedId,
+    listRef,
+    selectedIndicatorRef,
+  });
 
   const registerItem = useCallback((item: React.RefObject<HTMLLIElement>) => {
     setItems((prevItems) => {
@@ -177,7 +155,7 @@ export function Navbar(props: NavbarProps) {
         }}
       >
         <nav aria-label={props.label} className="navbar">
-          <ul role="menubar" className="navbar-list">
+          <ul ref={listRef} role="menubar" className="navbar-list">
             {React.Children.map(props.children, (child, index) => {
               if (isDev() && !isNavbarItem(child)) {
                 throw Error("Only NavbarItem allowed as child of Navbar");
@@ -190,6 +168,7 @@ export function Navbar(props: NavbarProps) {
           {selectedId !== undefined && (
             <div
               ref={selectedIndicatorRef}
+              style={dotStyles}
               className="navbar-item-selected-icon hidden"
             >
               <FontAwesomeIcon size="xs" icon={faCircle} color="#4EB3DB" />

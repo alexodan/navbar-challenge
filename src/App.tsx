@@ -57,6 +57,7 @@ function App() {
       <Navbar label="Nav Menu">
         {items.map((item, i) => (
           <NavbarItem
+            defaultSelected={i === 20}
             key={`${item.title}-${i}`}
             icon={item.icon}
             title={item.title}
@@ -69,3 +70,13 @@ function App() {
 }
 
 export default App;
+// Things I changed since last time:
+// - Moved things to /components/Navbar 😵‍💫
+// - Fixed animation (deregisterItem on NavbarItem)
+// - Added a `defaultSelected` prop to NavbarItem
+// - isNavbarItem check function had a bug, fixed it
+// - Added flag isDev environment!
+// - extracted logic of animation to `useDotAnimation`
+// TODO:
+// - question: Tell me, why do we need this tabIndex? What's the downside?
+//   Hint: It would be better using li > button, or, li > a as these are accessible by default.
