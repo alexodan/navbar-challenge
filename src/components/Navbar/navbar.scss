@@ -1,7 +1,27 @@
 @import "../../variables.scss";
 
 .navbar {
+  max-width: 600px;
   position: relative;
+  .space {
+    position: absolute;
+    bottom: 0px;
+    width: 600px;
+    .spot {
+      transform: translateX(calc(100% * var(--navbar-item-active)));
+      transition: transform 0.5s cubic-bezier(0.4, 1.42, 0.58, 1);
+      width: calc(100%/var(--navbar-items));
+      .dot {
+        background-color: #1BBCF6;
+        border-radius: 50%;
+        height: 12px;
+        left: calc(50% - 6px);
+        position: absolute;
+        bottom: 10px;
+        width: 12px;
+      }
+    }
+  }
 }
 
 .navbar-list {
@@ -9,11 +29,9 @@
   border-radius: 10px;
   color: $light-text;
   display: flex;
-  // grid-template-columns: 1fr 1fr 1fr 1fr;
   height: 80px;
-  justify-content: space-around;
-  max-width: 600px;
-  padding: 12px;
+  margin: 0;
+  padding: 0;
   position: relative;
 }
 
@@ -32,13 +50,7 @@
   cursor: pointer;
   display: flex;
   flex-direction: column;
-  justify-self: center;
-  width: 100%;
-}
-
-.navbar-item-selected-icon {
-  position: absolute;
-  transition: transform 0.3s ease-in-out;
+  width: calc(100%/var(--navbar-items));
 }
 
 @keyframes fadeOut {
@@ -49,7 +61,7 @@
 .navbar-item-title {
   display: block;
   margin-top: 10px;
-  &.selected {
+  &.active {
     animation: fadeOut 0.3s;
     opacity: 0;
   }

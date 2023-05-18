@@ -54,7 +54,7 @@ function App() {
       >
         Remove item from nav
       </button>
-      <Navbar label="Nav Menu" defaultSelected={0}>
+      <Navbar label="Nav Menu" defaultActive={0}>
         {items.map((item, i) => (
           <NavbarItem
             key={`${item.title}-${i}`}

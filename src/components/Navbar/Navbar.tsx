@@ -6,7 +6,6 @@ import React, {
   useState,
 } from "react";
 import { IconDefinition } from "@fortawesome/free-regular-svg-icons";
-import { faCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ThemeContext, ThemeProvider } from "../../theme";
 import { isNavbarItem } from "./Navbar.utils";
@@ -17,8 +16,8 @@ import "./navbar.scss";
 
 const NavbarContext = React.createContext<{
   items?: React.RefObject<HTMLLIElement>[];
-  selectedId?: number;
-  setSelectedId?: (id?: number) => void;
+  activeId?: number;
+  setActiveId?: (id?: number) => void;
   registerItem?: (item: React.RefObject<HTMLLIElement>) => void;
   unRegisterItem?: (item: React.RefObject<HTMLLIElement>) => void;
 }>({});
@@ -32,16 +31,16 @@ type NavbarItemProps = {
 
 export function NavbarItem({ icon, title, onSelect, id }: NavbarItemProps) {
   const theme = useContext(ThemeContext);
-  const { selectedId, setSelectedId, registerItem, unRegisterItem } =
+  const { activeId, setActiveId, registerItem, unRegisterItem } =
     useContext(NavbarContext);
   const itemRef = useRef<HTMLLIElement>(null);
 
   const handleClick = () => {
-    // If is already selected, then deselect
-    if (id === selectedId) {
-      setSelectedId?.(undefined);
+    // If is already active, then deselect
+    if (id === activeId) {
+      setActiveId?.(undefined);
     } else {
-      setSelectedId?.(id);
+      setActiveId?.(id);
       onSelect({ title, id });
     }
   };
@@ -50,11 +49,11 @@ export function NavbarItem({ icon, title, onSelect, id }: NavbarItemProps) {
     switch (event.key) {
       case "Enter":
       case " ":
-        // If is already selected, then deselect
-        if (id === selectedId) {
-          setSelectedId?.(undefined);
+        // If is already active, then deselect
+        if (id === activeId) {
+          setActiveId?.(undefined);
         } else {
-          setSelectedId?.(id);
+          setActiveId?.(id);
           onSelect({ title, id });
         }
         break;
@@ -66,9 +65,9 @@ export function NavbarItem({ icon, title, onSelect, id }: NavbarItemProps) {
   useEffect(() => {
     registerItem?.(itemRef);
     return () => unRegisterItem?.(itemRef);
-  }, [setSelectedId, id, registerItem, unRegisterItem]);
+  }, [setActiveId, id, registerItem, unRegisterItem]);
 
-  const isSelected = id === selectedId;
+  const isActive = id === activeId;
 
   return (
     <li
@@ -83,14 +82,14 @@ export function NavbarItem({ icon, title, onSelect, id }: NavbarItemProps) {
         icon={icon}
         size="2x" // this should be a param
         color={
-          isSelected
+          isActive
             ? style.primary
             : theme?.colorMode === "dark"
             ? style.lightBackground
             : style.darkBackground
         }
       />
-      <div className={`navbar-item-title ${isSelected ? "selected" : ""}`}>
+      <div className={`navbar-item-title ${isActive ? "active" : ""}`}>
         <span className="navbar-item-title-text">{title}</span>
       </div>
     </li>
@@ -100,20 +99,16 @@ export function NavbarItem({ icon, title, onSelect, id }: NavbarItemProps) {
 type NavbarProps = {
   label: string;
   children: React.ReactNode;
-  defaultSelected?: number;
+  defaultActive?: number;
 };
 
-export function Navbar({ label, children, defaultSelected }: NavbarProps) {
-  const [selectedId, setSelectedId] = useState<number>();
+export function Navbar({ label, children, defaultActive }: NavbarProps) {
+  const [activeId, setActiveId] = useState<number>();
   const [items, setItems] = useState<React.RefObject<HTMLLIElement>[]>([]);
-  const selectedIndicatorRef = useRef<HTMLDivElement>(null);
-  const listRef = useRef<HTMLUListElement>(null);
 
-  const dotStyles = useDotAnimation({
-    items,
-    selectedId,
-    listRef,
-    selectedIndicatorRef,
+  const { listRef, spaceRef } = useDotAnimation({
+    items: items.length,
+    activeId: activeId,
   });
 
   const registerItem = useCallback((item: React.RefObject<HTMLLIElement>) => {
@@ -128,24 +123,24 @@ export function Navbar({ label, children, defaultSelected }: NavbarProps) {
   const unRegisterItem = useCallback((item: React.RefObject<HTMLLIElement>) => {
     setItems((prevItems) => {
       // Note: i was between putting this logic here or handle it in useDotAnimation
-      setSelectedId((prevId) => (prevItems.length - 1 === prevId ? 0 : prevId));
+      setActiveId((prevId) => (prevItems.length - 1 === prevId ? 0 : prevId));
       return prevItems.filter((i) => i !== item);
     });
   }, []);
 
   useEffect(() => {
-    if (defaultSelected !== undefined && selectedId === undefined) {
-      setSelectedId(defaultSelected);
+    if (defaultActive !== undefined && activeId === undefined) {
+      setActiveId(defaultActive);
     }
-  }, [selectedId, items, defaultSelected]);
+  }, [activeId, items, defaultActive]);
 
   return (
     <ThemeProvider>
       <NavbarContext.Provider
         value={{
           items,
-          selectedId,
-          setSelectedId,
+          activeId,
+          setActiveId,
           registerItem,
           unRegisterItem,
         }}
@@ -161,15 +156,11 @@ export function Navbar({ label, children, defaultSelected }: NavbarProps) {
               });
             })}
           </ul>
-          {selectedId !== undefined && (
-            <div
-              ref={selectedIndicatorRef}
-              style={dotStyles}
-              className="navbar-item-selected-icon hidden"
-            >
-              <FontAwesomeIcon size="xs" icon={faCircle} color="#4EB3DB" />
+          <div className="space" ref={spaceRef}>
+            <div className="spot">
+              <div className="dot"></div>
             </div>
-          )}
+          </div>
         </nav>
       </NavbarContext.Provider>
     </ThemeProvider>
