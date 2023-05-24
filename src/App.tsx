@@ -70,7 +70,5 @@ function App() {
 
 export default App;
 // TODO:
-// - question: Tell me, why do we need this tabIndex? What's the downside?
-//   Hint: It would be better using li > button, or, li > a as these are accessible by default.
 // - Bonus
 //   Consistency - how would you “enforce” the correct usage of icons and colors? (eg Theme)

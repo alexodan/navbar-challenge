@@ -49,6 +49,7 @@ export function NavbarItem({ icon, title, onSelect, id }: NavbarItemProps) {
     switch (event.key) {
       case "Enter":
       case " ":
+        event.preventDefault();
         // If is already active, then deselect
         if (id === activeId) {
           setActiveId?.(undefined);
@@ -70,28 +71,33 @@ export function NavbarItem({ icon, title, onSelect, id }: NavbarItemProps) {
   const isActive = id === activeId;
 
   return (
-    <li
-      tabIndex={0}
-      className="navbar-item"
-      onClick={handleClick}
-      onKeyDown={handleKeyDown}
-      ref={itemRef}
-    >
-      <FontAwesomeIcon
-        className="navbar-item-icon"
-        icon={icon}
-        size="2x" // this should be a param
-        color={
-          isActive
-            ? style.primary
-            : theme?.colorMode === "dark"
-            ? style.lightBackground
-            : style.darkBackground
-        }
-      />
-      <div className={`navbar-item-title ${isActive ? "active" : ""}`}>
-        <span className="navbar-item-title-text">{title}</span>
-      </div>
+    <li className="navbar-item" ref={itemRef}>
+      <button
+        onKeyDown={handleKeyDown}
+        onClick={handleClick}
+        className="navbar-item-btn"
+      >
+        <span className="navbar-item-icon-container">
+          <FontAwesomeIcon
+            // TODO: pass sx prop to override styles
+            className={`navbar-item-icon ${isActive ? "active" : ""}`}
+            icon={icon}
+            color={
+              isActive
+                ? style.primary
+                : theme?.colorMode === "dark"
+                ? style.lightBackground
+                : style.darkBackground
+            }
+          />
+          <div
+            className={`navbar-item-icon-overlay ${isActive ? "active" : ""}`}
+          />
+        </span>
+        <div className={`navbar-item-title ${isActive ? "active" : ""}`}>
+          <span className="navbar-item-title-text">{title}</span>
+        </div>
+      </button>
     </li>
   );
 }
@@ -158,7 +164,7 @@ export function Navbar({ label, children, defaultActive }: NavbarProps) {
           </ul>
           <div className="space" ref={spaceRef}>
             <div className="spot">
-              <div className="dot"></div>
+              {activeId !== undefined && <div className="dot"></div>}
             </div>
           </div>
         </nav>

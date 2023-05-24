@@ -1,23 +1,23 @@
 @import "../../variables.scss";
 
 .navbar {
-  max-width: 600px;
+  max-width: 480px;
   position: relative;
   .space {
     position: absolute;
     bottom: 0px;
-    width: 600px;
+    width: 480px;
     .spot {
       transform: translateX(calc(100% * var(--navbar-item-active)));
       transition: transform 0.5s cubic-bezier(0.4, 1.42, 0.58, 1);
-      width: calc(100%/var(--navbar-items));
+      width: calc(100% / var(--navbar-items));
       .dot {
-        background-color: #1BBCF6;
+        background-color: #1bbcf6;
         border-radius: 50%;
         height: 12px;
         left: calc(50% - 6px);
         position: absolute;
-        bottom: 10px;
+        bottom: 14px;
         width: 12px;
       }
     }
@@ -50,12 +50,52 @@
   cursor: pointer;
   display: flex;
   flex-direction: column;
-  width: calc(100%/var(--navbar-items));
+  width: calc(100% / var(--navbar-items));
+  &-btn {
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+  }
+  &-icon {
+    font-size: 30px;
+    transform-origin: bottom left;
+    &.active {
+      animation: jump 0.5s;
+    }
+  }
+  &-icon-container {
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+  }
+  &-icon-overlay {
+    background-color: $light-background;
+    top: 0;
+    height: 100%;
+    mix-blend-mode: color;
+    position: absolute;
+    right: 0;
+    width: 100%;
+    &.active {
+      height: 0%;
+      transition: height 0.4s cubic-bezier(0, -0.84, 0.91, 1.03);
+    }
+  }
 }
 
 @keyframes fadeOut {
-  0% { opacity: 1; }
-  100% { opacity: 0; }
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes jump {
+  25% {
+    transform: rotate(12deg);
+  }
 }
 
 .navbar-item-title {
@@ -64,5 +104,17 @@
   &.active {
     animation: fadeOut 0.3s;
     opacity: 0;
+  }
+  &-text {
+    color: $light-text;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .navbar-item-icon-overlay {
+    background-color: $dark-background;
+  }
+  .navbar-item-title-text {
+    color: $dark-text;
   }
 }
