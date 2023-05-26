@@ -27,19 +27,23 @@ type NavbarItemProps = {
   title: string;
   onSelect: ({ title, id }: { title: string; id?: number }) => void;
   id?: number; // TODO: find out how not to expose this prop
+  iconStyles?: React.CSSProperties;
 };
 
-export function NavbarItem({ icon, title, onSelect, id }: NavbarItemProps) {
+export function NavbarItem({
+  icon,
+  title,
+  onSelect,
+  id,
+  iconStyles,
+}: NavbarItemProps) {
   const theme = useContext(ThemeContext);
   const { activeId, setActiveId, registerItem, unRegisterItem } =
     useContext(NavbarContext);
   const itemRef = useRef<HTMLLIElement>(null);
 
   const handleClick = () => {
-    // If is already active, then deselect
-    if (id === activeId) {
-      setActiveId?.(undefined);
-    } else {
+    if (id !== activeId) {
       setActiveId?.(id);
       onSelect({ title, id });
     }
@@ -50,10 +54,7 @@ export function NavbarItem({ icon, title, onSelect, id }: NavbarItemProps) {
       case "Enter":
       case " ":
         event.preventDefault();
-        // If is already active, then deselect
-        if (id === activeId) {
-          setActiveId?.(undefined);
-        } else {
+        if (id !== activeId) {
           setActiveId?.(id);
           onSelect({ title, id });
         }
@@ -79,12 +80,12 @@ export function NavbarItem({ icon, title, onSelect, id }: NavbarItemProps) {
       >
         <span className="navbar-item-icon-container">
           <FontAwesomeIcon
-            // TODO: pass sx prop to override styles
             className={`navbar-item-icon ${isActive ? "active" : ""}`}
+            style={iconStyles}
             icon={icon}
             color={
               isActive
-                ? style.primary
+                ? iconStyles?.color ?? style.primary
                 : theme?.colorMode === "dark"
                 ? style.lightBackground
                 : style.darkBackground
@@ -128,7 +129,6 @@ export function Navbar({ label, children, defaultActive }: NavbarProps) {
 
   const unRegisterItem = useCallback((item: React.RefObject<HTMLLIElement>) => {
     setItems((prevItems) => {
-      // Note: i was between putting this logic here or handle it in useDotAnimation
       setActiveId((prevId) => (prevItems.length - 1 === prevId ? 0 : prevId));
       return prevItems.filter((i) => i !== item);
     });

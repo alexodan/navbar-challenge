@@ -59,6 +59,7 @@ function App() {
           <NavbarItem
             key={`${item.title}-${i}`}
             icon={item.icon}
+            iconStyles={{ fontSize: "30px" }}
             title={item.title}
             onSelect={handleItemClicked}
           />

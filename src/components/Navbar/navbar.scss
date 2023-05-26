@@ -9,7 +9,7 @@
     width: 480px;
     .spot {
       transform: translateX(calc(100% * var(--navbar-item-active)));
-      transition: transform 0.5s cubic-bezier(0.4, 1.42, 0.58, 1);
+      transition: transform 0.5s cubic-bezier(0.5, 1.42, 0.58, 1);
       width: calc(100% / var(--navbar-items));
       .dot {
         background-color: #1bbcf6;
@@ -57,7 +57,6 @@
     border: none;
   }
   &-icon {
-    font-size: 30px;
     transform-origin: bottom left;
     &.active {
       animation: jump 0.5s;
@@ -75,10 +74,12 @@
     mix-blend-mode: color;
     position: absolute;
     right: 0;
+    transform-origin: bottom left;
     width: 100%;
     &.active {
       height: 0%;
-      transition: height 0.4s cubic-bezier(0, -0.84, 0.91, 1.03);
+      transition: height 0.5s cubic-bezier(0, -0.84, 0.91, 1.03);
+      animation: jump 0.5s;
     }
   }
 }
