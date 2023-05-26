@@ -80,6 +80,7 @@ export function NavbarItem({
       >
         <span className="navbar-item-icon-container">
           <FontAwesomeIcon
+            data-testid={`${icon.iconName}-icon`}
             className={`navbar-item-icon ${isActive ? "active" : ""}`}
             style={iconStyles}
             icon={icon}
