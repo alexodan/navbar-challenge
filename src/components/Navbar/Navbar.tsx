@@ -10,9 +10,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ThemeContext, ThemeProvider } from "../../theme";
 import { isNavbarItem } from "./Navbar.utils";
 import { isDev } from "../../utils";
-import useDotAnimation from "./hooks";
+import useDotAnimation from "./Navbar.hooks";
 import style from "../../variables.module.scss";
-import "./navbar.scss";
+import styles from "./navbar.module.scss";
 
 const NavbarContext = React.createContext<{
   items?: React.RefObject<HTMLLIElement>[];
@@ -49,21 +49,6 @@ export function NavbarItem({
     }
   };
 
-  const handleKeyDown = (event: React.KeyboardEvent) => {
-    switch (event.key) {
-      case "Enter":
-      case " ":
-        event.preventDefault();
-        if (id !== activeId) {
-          setActiveId?.(id);
-          onSelect({ title, id });
-        }
-        break;
-      default:
-        break;
-    }
-  };
-
   useEffect(() => {
     registerItem?.(itemRef);
     return () => unRegisterItem?.(itemRef);
@@ -72,16 +57,14 @@ export function NavbarItem({
   const isActive = id === activeId;
 
   return (
-    <li className="navbar-item" ref={itemRef}>
-      <button
-        onKeyDown={handleKeyDown}
-        onClick={handleClick}
-        className="navbar-item-btn"
-      >
-        <span className="navbar-item-icon-container">
+    <li className={styles["navbar-item"]} ref={itemRef}>
+      <button onClick={handleClick} className={styles["navbar-item-btn"]}>
+        <span className={styles["navbar-item-icon-container"]}>
           <FontAwesomeIcon
             data-testid={`${icon.iconName}-icon`}
-            className={`navbar-item-icon ${isActive ? "active" : ""}`}
+            className={`${styles["navbar-item-icon"]} ${
+              isActive ? styles["active"] : ""
+            }`}
             style={iconStyles}
             icon={icon}
             color={
@@ -93,11 +76,17 @@ export function NavbarItem({
             }
           />
           <div
-            className={`navbar-item-icon-overlay ${isActive ? "active" : ""}`}
+            className={`${styles["navbar-item-icon-overlay"]} ${
+              isActive ? styles["active"] : ""
+            }`}
           />
         </span>
-        <div className={`navbar-item-title ${isActive ? "active" : ""}`}>
-          <span className="navbar-item-title-text">{title}</span>
+        <div
+          className={`${styles["navbar-item-title"]} ${
+            isActive ? styles["active"] : ""
+          }`}
+        >
+          <span className={styles["navbar-item-title-text"]}>{title}</span>
         </div>
       </button>
     </li>
@@ -114,7 +103,7 @@ export function Navbar({ label, children, defaultActive }: NavbarProps) {
   const [activeId, setActiveId] = useState<number>();
   const [items, setItems] = useState<React.RefObject<HTMLLIElement>[]>([]);
 
-  const { listRef, spaceRef } = useDotAnimation({
+  const style = useDotAnimation({
     items: items.length,
     activeId: activeId,
   });
@@ -152,8 +141,8 @@ export function Navbar({ label, children, defaultActive }: NavbarProps) {
           unRegisterItem,
         }}
       >
-        <nav aria-label={label} className="navbar">
-          <ul ref={listRef} role="menubar" className="navbar-list">
+        <nav aria-label={label} className={styles["navbar"]}>
+          <ul role="menubar" className={styles["navbar-list"]} style={style}>
             {React.Children.map(children, (child, index) => {
               if (isDev() && !isNavbarItem(child)) {
                 throw Error("Only NavbarItem allowed as child of Navbar");
@@ -163,9 +152,11 @@ export function Navbar({ label, children, defaultActive }: NavbarProps) {
               });
             })}
           </ul>
-          <div className="space" ref={spaceRef}>
-            <div className="spot">
-              {activeId !== undefined && <div className="dot"></div>}
+          <div className={styles["navbar-space"]} style={style}>
+            <div className={styles["navbar-space-spot"]}>
+              {activeId !== undefined && (
+                <div className={styles["navbar-space-dot"]}></div>
+              )}
             </div>
           </div>
         </nav>

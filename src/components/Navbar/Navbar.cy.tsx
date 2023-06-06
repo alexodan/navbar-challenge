@@ -26,7 +26,7 @@ const initialItems = [
 ];
 
 describe("<Navbar />", () => {
-  it("renders navbar with 4 items", () => {
+  it("renders navbar with 4 items, all non active", () => {
     cy.mount(
       <Navbar label="Navbar">
         {initialItems.map((item, i) => (
@@ -40,6 +40,10 @@ describe("<Navbar />", () => {
         ))}
       </Navbar>
     );
+    cy.get(".navbar-item-icon").each(($item, _, $list) => {
+      expect($list.length).to.equal(4);
+      expect($item.hasClass("active")).to.equal(false);
+    });
   });
 
   it("should set first item as default active", () => {
