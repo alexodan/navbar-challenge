@@ -155,7 +155,10 @@ export function Navbar({ label, children, defaultActive }: NavbarProps) {
           <div className={styles["navbar-space"]} style={style}>
             <div className={styles["navbar-space-spot"]}>
               {activeId !== undefined && (
-                <div className={styles["navbar-space-dot"]}></div>
+                <div
+                  data-testid="navbar-space-dot"
+                  className={styles["navbar-space-dot"]}
+                ></div>
               )}
             </div>
           </div>

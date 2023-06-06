@@ -40,7 +40,7 @@ describe("<Navbar />", () => {
         ))}
       </Navbar>
     );
-    cy.get(".navbar-item-icon").each(($item, _, $list) => {
+    cy.get("[data-testid*=icon]").each(($item, _, $list) => {
       expect($list.length).to.equal(4);
       expect($item.hasClass("active")).to.equal(false);
     });
@@ -60,8 +60,10 @@ describe("<Navbar />", () => {
         ))}
       </Navbar>
     );
-    cy.get(".spot .dot").should("exist");
-    cy.get('[data-testid="clock-icon"]').should("have.class", "active");
+    cy.get('[data-testid="navbar-space-dot"]').should("exist");
+    cy.get("[data-testid='clock-icon']")
+      .invoke("attr", "class")
+      .should("contain", "active");
   });
 
   it("should fire an event and change active item on click", () => {
@@ -84,10 +86,12 @@ describe("<Navbar />", () => {
     cy.get(".spot .dot").should("not.exist");
     cy.get('[data-testid="clock-icon"]').should("not.have.class", "active");
 
-    cy.get(".navbar-item-btn").first().click();
+    cy.get("button").first().click();
 
     cy.get("@onClickSpy").should("have.been.called");
-    cy.get(".spot .dot").should("exist");
-    cy.get('[data-testid="clock-icon"]').should("have.class", "active");
+    cy.get("[data-testid='navbar-space-dot']").should("exist");
+    cy.get("[data-testid='clock-icon']")
+      .invoke("attr", "class")
+      .should("contain", "active");
   });
 });
