@@ -19,8 +19,10 @@
     width: 480px;
     &-spot {
       transform: translateX(calc(100% * var(--navbar-item-active)));
-      transition: transform 0.5s cubic-bezier(0.5, 1.42, 0.58, 1);
       width: calc(100% / var(--navbar-items));
+      @media (prefers-reduced-motion: no-preference) {
+        transition: transform 0.5s cubic-bezier(0.5, 1.42, 0.58, 1);
+      }
     }
     &-dot {
       background-color: #1bbcf6;
@@ -73,7 +75,10 @@
   &-icon {
     transform-origin: bottom left;
     &.active {
-      animation: jump 0.5s;
+      animation: none;
+      @media (prefers-reduced-motion: no-preference) {
+        animation: jump 0.5s;
+      }
     }
   }
   &-icon-container {
@@ -92,8 +97,11 @@
     width: 100%;
     &.active {
       height: 0%;
-      transition: height 0.5s cubic-bezier(0, -0.84, 0.91, 1.03);
-      animation: jump 0.5s;
+      animation: none;
+      @media (prefers-reduced-motion: no-preference) {
+        animation: jump 0.5s;
+        transition: height 0.5s cubic-bezier(0, -0.84, 0.91, 1.03);
+      }
     }
   }
 }
@@ -102,8 +110,11 @@
   display: block;
   margin-top: 10px;
   &.active {
-    animation: fadeOut 0.3s;
     opacity: 0;
+    animation: none;
+    @media (prefers-reduced-motion: no-preference) {
+      animation: fadeOut 0.3s;
+    }
   }
   &-text {
     color: $light-text;
