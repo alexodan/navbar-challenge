@@ -1,4 +1,4 @@
-import{j as e}from"./jsx-runtime-6eef64cc.js";import{M as i}from"./index-3c0f9feb.js";import{u as r}from"./index-dc1d5b46.js";import"./index-c013ead5.js";import"./_commonjsHelpers-725317a4.js";import"./iframe-d1dc9fc3.js";import"../sb-preview/runtime.js";import"./index-d475d2ea.js";import"./index-7e542631.js";import"./index-d37d4223.js";import"./index-356e4a49.js";function n(t){const s=Object.assign({h1:"h1",p:"p",strong:"strong",code:"code",a:"a"},r(),t.components);return e.jsxs(e.Fragment,{children:[e.jsx(i,{title:"Example/Introduction"}),`
+import{j as e}from"./jsx-runtime-6eef64cc.js";import{M as i}from"./index-f70ea132.js";import{u as r}from"./index-dc1d5b46.js";import"./index-c013ead5.js";import"./_commonjsHelpers-725317a4.js";import"./iframe-68726ee4.js";import"../sb-preview/runtime.js";import"./index-d475d2ea.js";import"./index-625f11b2.js";import"./index-d37d4223.js";import"./index-356e4a49.js";function n(t){const s=Object.assign({h1:"h1",p:"p",strong:"strong",code:"code",a:"a"},r(),t.components);return e.jsxs(e.Fragment,{children:[e.jsx(i,{title:"Example/Introduction"}),`
 `,e.jsx("style",{children:`
     .subheading {
       --mediumdark: '#999999';
@@ -122,4 +122,4 @@ View the source and add issues`]})})}),e.jsx("a",{className:"link-item",href:"ht
 Chat with maintainers and the community`]})})})]}),`
 `,e.jsx("div",{className:"tip-wrapper",children:e.jsxs(s.p,{children:[e.jsx("span",{className:"tip",children:"Tip"}),"Edit the Markdown in"," ",`
 `,e.jsx("code",{children:"stories/Introduction.stories.mdx"})]})})]})}function b(t={}){const{wrapper:s}=Object.assign({},r(),t.components);return s?e.jsx(s,Object.assign({},t,{children:e.jsx(n,t)})):n(t)}export{b as default};
-//# sourceMappingURL=Introduction-e2eb4557.js.map
+//# sourceMappingURL=Introduction-83fe8199.js.map
