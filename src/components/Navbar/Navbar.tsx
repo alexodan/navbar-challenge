@@ -22,21 +22,21 @@ const NavbarContext = React.createContext<{
   unRegisterItem?: (item: React.RefObject<HTMLLIElement>) => void;
 }>({});
 
-type NavbarItemProps = {
+type NavbarItemProps<T extends string> = {
   icon: IconDefinition;
-  title: string;
-  onSelect: ({ title, id }: { title: string; id?: number }) => void;
+  title: T;
+  onSelect: ({ title, id }: { title: T; id?: number }) => void;
   id?: number; // TODO: find out how not to expose this prop
   iconStyles?: React.CSSProperties;
 };
 
-export function NavbarItem({
+export function NavbarItem<T extends string>({
   icon,
   title,
   onSelect,
   id,
   iconStyles,
-}: NavbarItemProps) {
+}: NavbarItemProps<T>) {
   const theme = useContext(ThemeContext);
   const { activeId, setActiveId, registerItem, unRegisterItem } =
     useContext(NavbarContext);

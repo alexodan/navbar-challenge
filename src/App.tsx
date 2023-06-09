@@ -25,13 +25,32 @@ const initialItems = [
     icon: faUser,
     title: "User",
   },
-];
+] as const;
+
+type Tab = (typeof initialItems)[number]["title"];
 
 function App() {
-  const [items, setItems] = useState(initialItems);
+  const [items, setItems] = useState([...initialItems]);
+  const [activeTab, setActiveTab] = useState<Tab>(initialItems[0].title);
 
-  const handleItemClicked = ({ title, id }: { title: string; id?: number }) => {
+  const handleItemClicked = ({ title, id }: { title: Tab; id?: number }) => {
     console.log(`Item clicked title ${title} id ${id}`);
+    setActiveTab(title);
+  };
+
+  const getContentTab = (activeTab: Tab) => {
+    switch (activeTab) {
+      case "Time":
+        return "Time section";
+      case "Comments":
+        return "Comments section";
+      case "Compass":
+        return "Compass section";
+      case "User":
+        return "User section";
+      default:
+        return "Nothing to see here";
+    }
   };
 
   return (
@@ -65,11 +84,9 @@ function App() {
           />
         ))}
       </Navbar>
+      <div style={{ padding: "10px" }}>{getContentTab(activeTab)}</div>
     </>
   );
 }
 
 export default App;
-// TODO:
-// - Bonus
-//   Consistency - how would you “enforce” the correct usage of icons and colors? (eg Theme)
