@@ -31,6 +31,7 @@ describe("<Navbar />", () => {
       <Navbar label="Navbar">
         {initialItems.map((item, i) => (
           <NavbarItem
+            as="button"
             key={`${item.title}-${i}`}
             icon={item.icon}
             iconStyles={{ fontSize: "30px" }}
@@ -51,6 +52,7 @@ describe("<Navbar />", () => {
       <Navbar label="Navbar" defaultActive={0}>
         {initialItems.map((item, i) => (
           <NavbarItem
+            as="button"
             key={`${item.title}-${i}`}
             icon={item.icon}
             iconStyles={{ fontSize: "30px" }}
@@ -73,6 +75,7 @@ describe("<Navbar />", () => {
       <Navbar label="Navbar">
         {initialItems.map((item, i) => (
           <NavbarItem
+            as="button"
             key={`${item.title}-${i}`}
             icon={item.icon}
             iconStyles={{ fontSize: "30px" }}

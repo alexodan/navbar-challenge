@@ -76,6 +76,9 @@ function App() {
       <Navbar label="Nav Menu" defaultActive={0}>
         {items.map((item, i) => (
           <NavbarItem
+            // as="a"
+            // href={`#${item.title}`}
+            as="button"
             key={`${item.title}-${i}`}
             icon={item.icon}
             iconStyles={{ fontSize: "30px" }}

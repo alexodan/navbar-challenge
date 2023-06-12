@@ -14,7 +14,8 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "cypress:open": "cypress open",
-    "cypress:run:component": "cypress run --component"
+    "cypress:run:component": "cypress run --component",
+    "percy": "percy exec -- cypress run --component --config-file cypress.config.ts"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.4.0",
@@ -25,6 +26,8 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@percy/cli": "^1.26.0",
+    "@percy/cypress": "^3.1.2",
     "@storybook/addon-essentials": "^7.0.12",
     "@storybook/addon-interactions": "^7.0.12",
     "@storybook/addon-links": "^7.0.12",
@@ -49,7 +52,7 @@
     "sass": "^1.62.1",
     "storybook": "^7.0.12",
     "styled-components": "^5.3.10",
-    "typescript": "^5.0.2",
+    "typescript": "^5.1.3",
     "vite": "^4.3.2"
   }
 }

@@ -66,6 +66,7 @@
   cursor: pointer;
   display: flex;
   flex-direction: column;
+  text-align: center;
   width: calc(100% / var(--navbar-items));
   &-btn {
     cursor: pointer;

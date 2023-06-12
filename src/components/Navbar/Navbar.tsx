@@ -23,6 +23,8 @@ const NavbarContext = React.createContext<{
 }>({});
 
 type NavbarItemProps<T extends string> = {
+  as: "a" | "button";
+  href?: string;
   icon: IconDefinition;
   title: T;
   onSelect: ({ title, id }: { title: T; id?: number }) => void;
@@ -31,6 +33,8 @@ type NavbarItemProps<T extends string> = {
 };
 
 export function NavbarItem<T extends string>({
+  as: Comp = "button",
+  href,
   icon,
   title,
   onSelect,
@@ -56,9 +60,15 @@ export function NavbarItem<T extends string>({
 
   const isActive = id === activeId;
 
+  const additionalProps = Comp === "a" ? { href } : {};
+
   return (
     <li className={styles["navbar-item"]} ref={itemRef}>
-      <button onClick={handleClick} className={styles["navbar-item-btn"]}>
+      <Comp
+        {...additionalProps}
+        onClick={handleClick}
+        className={styles["navbar-item-btn"]}
+      >
         <span className={styles["navbar-item-icon-container"]}>
           <FontAwesomeIcon
             data-testid={`${icon.iconName}-icon`}
@@ -88,7 +98,7 @@ export function NavbarItem<T extends string>({
         >
           <span className={styles["navbar-item-title-text"]}>{title}</span>
         </div>
-      </button>
+      </Comp>
     </li>
   );
 }
