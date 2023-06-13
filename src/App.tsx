@@ -29,6 +29,8 @@ const initialItems = [
 
 type Tab = (typeof initialItems)[number]["title"];
 
+// bonus: make it headless
+
 function App() {
   const [items, setItems] = useState([...initialItems]);
   const [activeTab, setActiveTab] = useState<Tab>(initialItems[0].title);
@@ -78,7 +80,6 @@ function App() {
           <NavbarItem
             // as="a"
             // href={`#${item.title}`}
-            as="button"
             key={`${item.title}-${i}`}
             icon={item.icon}
             iconStyles={{ fontSize: "30px" }}

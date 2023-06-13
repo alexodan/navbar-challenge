@@ -31,7 +31,6 @@ describe("<Navbar />", () => {
       <Navbar label="Navbar">
         {initialItems.map((item, i) => (
           <NavbarItem
-            as="button"
             key={`${item.title}-${i}`}
             icon={item.icon}
             iconStyles={{ fontSize: "30px" }}
@@ -41,7 +40,7 @@ describe("<Navbar />", () => {
         ))}
       </Navbar>
     );
-    cy.get("[data-testid*=icon]").each(($item, _, $list) => {
+    cy.get("[data-test-id*=icon]").each(($item, _, $list) => {
       expect($list.length).to.equal(4);
       expect($item.hasClass("active")).to.equal(false);
     });
@@ -52,7 +51,6 @@ describe("<Navbar />", () => {
       <Navbar label="Navbar" defaultActive={0}>
         {initialItems.map((item, i) => (
           <NavbarItem
-            as="button"
             key={`${item.title}-${i}`}
             icon={item.icon}
             iconStyles={{ fontSize: "30px" }}
@@ -62,20 +60,19 @@ describe("<Navbar />", () => {
         ))}
       </Navbar>
     );
-    cy.get('[data-testid="navbar-space-dot"]').should("exist");
-    cy.get("[data-testid='clock-icon']")
+    cy.get('[data-test-id="navbar-space-dot"]').should("exist");
+    cy.get("[data-test-id='clock-icon']")
       .invoke("attr", "class")
       .should("contain", "active");
   });
 
-  it("should fire an event and change active item on click", () => {
+  it("should fire an event and change active items on consecutive clicks", () => {
     const onClickSpy = cy.spy().as("onClickSpy");
 
     cy.mount(
       <Navbar label="Navbar">
         {initialItems.map((item, i) => (
           <NavbarItem
-            as="button"
             key={`${item.title}-${i}`}
             icon={item.icon}
             iconStyles={{ fontSize: "30px" }}
@@ -87,14 +84,24 @@ describe("<Navbar />", () => {
     );
 
     cy.get(".spot .dot").should("not.exist");
-    cy.get('[data-testid="clock-icon"]').should("not.have.class", "active");
+    cy.get('[data-test-id="clock-icon"]').should("not.have.class", "active");
 
     cy.get("button").first().click();
 
     cy.get("@onClickSpy").should("have.been.called");
-    cy.get("[data-testid='navbar-space-dot']").should("exist");
-    cy.get("[data-testid='clock-icon']")
+    cy.get("[data-test-id='navbar-space-dot']").should("exist");
+    cy.get("[data-test-id='clock-icon']")
       .invoke("attr", "class")
       .should("contain", "active");
+
+    cy.percySnapshot("first item active");
+
+    cy.get("button").last().click();
+
+    cy.get("[data-test-id='user-icon']")
+      .invoke("attr", "class")
+      .should("contain", "active");
+
+    cy.percySnapshot("last item active");
   });
 });

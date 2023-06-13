@@ -13,6 +13,9 @@ import { isDev } from "../../utils";
 import useDotAnimation from "./Navbar.hooks";
 import style from "../../variables.module.scss";
 import styles from "./navbar.module.scss";
+import classNames from "classnames/bind";
+
+const cx = classNames.bind(styles);
 
 const NavbarContext = React.createContext<{
   items?: React.RefObject<HTMLLIElement>[];
@@ -33,7 +36,7 @@ type NavbarItemProps<T extends string> = {
 };
 
 export function NavbarItem<T extends string>({
-  as: Comp = "button",
+  as: Comp,
   href,
   icon,
   title,
@@ -63,18 +66,16 @@ export function NavbarItem<T extends string>({
   const additionalProps = Comp === "a" ? { href } : {};
 
   return (
-    <li className={styles["navbar-item"]} ref={itemRef}>
+    <li className={styles.navbarItem} ref={itemRef}>
       <Comp
         {...additionalProps}
         onClick={handleClick}
-        className={styles["navbar-item-btn"]}
+        className={styles.navbarItemBtn}
       >
-        <span className={styles["navbar-item-icon-container"]}>
+        <span className={styles.navbarItemIconContainer}>
           <FontAwesomeIcon
-            data-testid={`${icon.iconName}-icon`}
-            className={`${styles["navbar-item-icon"]} ${
-              isActive ? styles["active"] : ""
-            }`}
+            data-test-id={`${icon.iconName}-icon`}
+            className={cx("navbarItemIcon", { active: isActive })}
             style={iconStyles}
             icon={icon}
             color={
@@ -85,23 +86,18 @@ export function NavbarItem<T extends string>({
                 : style.darkBackground
             }
           />
-          <div
-            className={`${styles["navbar-item-icon-overlay"]} ${
-              isActive ? styles["active"] : ""
-            }`}
-          />
+          <div className={cx("navbarItemIconOverlay", { active: isActive })} />
         </span>
-        <div
-          className={`${styles["navbar-item-title"]} ${
-            isActive ? styles["active"] : ""
-          }`}
-        >
-          <span className={styles["navbar-item-title-text"]}>{title}</span>
+        <div className={cx("navbarItemTitle", { active: isActive })}>
+          <span className={styles.navbarItemTitleText}>{title}</span>
         </div>
       </Comp>
     </li>
   );
 }
+
+// Note: check eslint rule "react/require-default-props"
+NavbarItem.defaultProps = { as: "button" };
 
 type NavbarProps = {
   label: string;
@@ -151,8 +147,8 @@ export function Navbar({ label, children, defaultActive }: NavbarProps) {
           unRegisterItem,
         }}
       >
-        <nav aria-label={label} className={styles["navbar"]}>
-          <ul role="menubar" className={styles["navbar-list"]} style={style}>
+        <nav aria-label={label} className={styles.navbar}>
+          <ul role="menubar" className={styles.navbarList} style={style}>
             {React.Children.map(children, (child, index) => {
               if (isDev() && !isNavbarItem(child)) {
                 throw Error("Only NavbarItem allowed as child of Navbar");
@@ -162,12 +158,12 @@ export function Navbar({ label, children, defaultActive }: NavbarProps) {
               });
             })}
           </ul>
-          <div className={styles["navbar-space"]} style={style}>
-            <div className={styles["navbar-space-spot"]}>
+          <div className={styles.navbarSpace} style={style}>
+            <div className={styles.navbarSpaceSpot}>
               {activeId !== undefined && (
                 <div
-                  data-testid="navbar-space-dot"
-                  className={styles["navbar-space-dot"]}
+                  data-test-id="navbar-space-dot"
+                  className={styles.navbarSpaceDot}
                 ></div>
               )}
             </div>
