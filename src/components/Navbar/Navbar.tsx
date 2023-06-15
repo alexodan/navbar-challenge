@@ -83,13 +83,13 @@ export function NavbarItem<T extends string>({
         <span className={styles.navbarItemIconContainer}>
           <FontAwesomeIcon
             data-test-id={`${icon.iconName}-icon`}
-            className={cx("navbarItemIcon", { active: isActive })}
+            className={cx("navbarItemIcon", { isActive })}
             style={iconStyles}
             icon={icon}
           />
-          <div className={cx("navbarItemIconOverlay", { active: isActive })} />
+          <div className={cx("navbarItemIconOverlay", { isActive })} />
         </span>
-        <div className={cx("navbarItemTitle", { active: isActive })}>
+        <div className={cx("navbarItemTitle", { isActive })}>
           <span className={styles.navbarItemTitleText}>{title}</span>
         </div>
       </Comp>
