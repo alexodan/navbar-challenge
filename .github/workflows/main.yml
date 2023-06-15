@@ -22,6 +22,7 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v5
         with:
+          install: false
           component: true # maybe this is redundant
           command: percy exec -- cypress run --component --config-file cypress.config.ts
         env:
