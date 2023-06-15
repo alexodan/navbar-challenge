@@ -29,6 +29,13 @@ const initialItems = [
 
 type Tab = (typeof initialItems)[number]["title"];
 
+const tabContentLookup = {
+  Time: "Time section content",
+  Comments: "Comments section content",
+  Compass: "Compass section content",
+  User: "User section content",
+} as Record<Tab, string>;
+
 // bonus: make it headless
 
 function App() {
@@ -38,21 +45,6 @@ function App() {
   const handleItemClicked = ({ title, id }: { title: Tab; id?: number }) => {
     console.log(`Item clicked title ${title} id ${id}`);
     setActiveTab(title);
-  };
-
-  const getContentTab = (activeTab: Tab) => {
-    switch (activeTab) {
-      case "Time":
-        return "Time section";
-      case "Comments":
-        return "Comments section";
-      case "Compass":
-        return "Compass section";
-      case "User":
-        return "User section";
-      default:
-        return "Nothing to see here";
-    }
   };
 
   return (
@@ -88,7 +80,7 @@ function App() {
           />
         ))}
       </Navbar>
-      <div style={{ padding: "10px" }}>{getContentTab(activeTab)}</div>
+      <div style={{ padding: "10px" }}>{tabContentLookup[activeTab]}</div>
     </>
   );
 }

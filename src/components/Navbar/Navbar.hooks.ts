@@ -5,7 +5,7 @@ type UseDotHookProps = {
 
 export default function useDotAnimation({ items, activeId }: UseDotHookProps) {
   return {
-    "--navbar-items": String(items),
-    "--navbar-item-active": String(activeId ?? ""),
+    "--navbar-items": items,
+    "--navbar-item-active": activeId ?? "",
   } as React.CSSProperties;
 }

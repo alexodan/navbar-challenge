@@ -7,11 +7,10 @@ import React, {
 } from "react";
 import { IconDefinition } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ThemeContext, ThemeProvider } from "../../theme";
+import { ThemeProvider } from "../../theme";
 import { isNavbarItem } from "./Navbar.utils";
 import { isDev } from "../../utils";
 import useDotAnimation from "./Navbar.hooks";
-import style from "../../variables.module.scss";
 import styles from "./navbar.module.scss";
 import classNames from "classnames/bind";
 
@@ -25,26 +24,34 @@ const NavbarContext = React.createContext<{
   unRegisterItem?: (item: React.RefObject<HTMLLIElement>) => void;
 }>({});
 
-type NavbarItemProps<T extends string> = {
-  as: "a" | "button";
-  href?: string;
-  icon: IconDefinition;
-  title: T;
-  onSelect: ({ title, id }: { title: T; id?: number }) => void;
-  id?: number; // TODO: find out how not to expose this prop
-  iconStyles?: React.CSSProperties;
-};
+type NavbarItemProps<T extends string> =
+  | {
+      as: "a";
+      href: string;
+      icon: IconDefinition;
+      title: T;
+      onSelect: ({ title, id }: { title: T; id?: number }) => void;
+      id?: number;
+      iconStyles?: React.CSSProperties;
+    }
+  | {
+      as: "button";
+      icon: IconDefinition;
+      title: T;
+      onSelect: ({ title, id }: { title: T; id?: number }) => void;
+      id?: number;
+      iconStyles?: React.CSSProperties;
+    };
 
 export function NavbarItem<T extends string>({
   as: Comp,
-  href,
   icon,
   title,
   onSelect,
   id,
   iconStyles,
+  ...props
 }: NavbarItemProps<T>) {
-  const theme = useContext(ThemeContext);
   const { activeId, setActiveId, registerItem, unRegisterItem } =
     useContext(NavbarContext);
   const itemRef = useRef<HTMLLIElement>(null);
@@ -59,11 +66,12 @@ export function NavbarItem<T extends string>({
   useEffect(() => {
     registerItem?.(itemRef);
     return () => unRegisterItem?.(itemRef);
-  }, [setActiveId, id, registerItem, unRegisterItem]);
+  }, [registerItem, unRegisterItem]);
 
   const isActive = id === activeId;
 
-  const additionalProps = Comp === "a" ? { href } : {};
+  const additionalProps =
+    Comp === "a" && "href" in props ? { href: props.href } : {};
 
   return (
     <li className={styles.navbarItem} ref={itemRef}>
@@ -78,13 +86,6 @@ export function NavbarItem<T extends string>({
             className={cx("navbarItemIcon", { active: isActive })}
             style={iconStyles}
             icon={icon}
-            color={
-              isActive
-                ? iconStyles?.color ?? style.primary
-                : theme?.colorMode === "dark"
-                ? style.lightBackground
-                : style.darkBackground
-            }
           />
           <div className={cx("navbarItemIconOverlay", { active: isActive })} />
         </span>
