@@ -104,9 +104,10 @@ type NavbarProps = {
   label: string;
   children: React.ReactNode;
   defaultActive?: number;
+  style?: React.CSSProperties;
 };
 
-export function Navbar({ label, children, defaultActive }: NavbarProps) {
+export function Navbar({ label, children, defaultActive, style: userStyles }: NavbarProps) {
   const [activeId, setActiveId] = useState<number>();
   const [items, setItems] = useState<React.RefObject<HTMLLIElement>[]>([]);
 
@@ -148,7 +149,7 @@ export function Navbar({ label, children, defaultActive }: NavbarProps) {
           unRegisterItem,
         }}
       >
-        <nav aria-label={label} className={styles.navbar}>
+        <nav aria-label={label} className={styles.navbar} style={userStyles}>
           <ul role="menubar" className={styles.navbarList} style={style}>
             {React.Children.map(children, (child, index) => {
               if (isDev() && !isNavbarItem(child)) {
@@ -173,6 +174,11 @@ export function Navbar({ label, children, defaultActive }: NavbarProps) {
       </NavbarContext.Provider>
     </ThemeProvider>
   );
+}
+
+Navbar.defaultProps = {
+  label: 'Navbar',
+  defaultActive: 0,
 }
 
 export default Navbar;

@@ -36,10 +36,7 @@ const tabContentLookup = {
   User: "User section content",
 } as Record<Tab, string>;
 
-// bonus: make it headless
-
 function App() {
-  const [items, setItems] = useState([...initialItems]);
   const [activeTab, setActiveTab] = useState<Tab>(initialItems[0].title);
 
   const handleItemClicked = ({ title, id }: { title: Tab; id?: number }) => {
@@ -48,30 +45,10 @@ function App() {
   };
 
   return (
-    <>
-      <button
-        onClick={() =>
-          setItems((prev) => [
-            ...prev,
-            {
-              icon: faUser,
-              title: "User",
-            },
-          ])
-        }
-      >
-        Add item from nav
-      </button>
-      <button
-        onClick={() => setItems((prev) => prev.slice(0, prev.length - 1))}
-      >
-        Remove item from nav
-      </button>
-      <Navbar label="Nav Menu" defaultActive={0}>
-        {items.map((item, i) => (
+    <div>
+      <Navbar>
+        {initialItems.map((item, i) => (
           <NavbarItem
-            // as="a"
-            // href={`#${item.title}`}
             key={`${item.title}-${i}`}
             icon={item.icon}
             iconStyles={{ fontSize: "30px" }}
@@ -81,7 +58,7 @@ function App() {
         ))}
       </Navbar>
       <div style={{ padding: "10px" }}>{tabContentLookup[activeTab]}</div>
-    </>
+    </div>
   );
 }
 

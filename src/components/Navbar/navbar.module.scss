@@ -1,5 +1,5 @@
 .navbar {
-  max-width: 480px;
+  width: calc(var(--navbar-width));
   position: relative;
   &List {
     background-color: var(--light-background);
@@ -14,7 +14,7 @@
   &Space {
     position: absolute;
     bottom: 0px;
-    width: 480px;
+    width: var(--navbar-width);
     &Spot {
       transform: translateX(calc(100% * var(--navbar-item-active)));
       width: calc(100% / var(--navbar-items));
