@@ -178,7 +178,6 @@ export function Navbar({ label, children, defaultActive, style: userStyles }: Na
 
 Navbar.defaultProps = {
   label: 'Navbar',
-  defaultActive: 0,
 }
 
 export default Navbar;

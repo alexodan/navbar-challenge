@@ -42,7 +42,7 @@ describe("<Navbar />", () => {
     );
     cy.get("[data-test-id*=icon]").each(($item, _, $list) => {
       expect($list.length).to.equal(4);
-      expect($item.hasClass("active")).to.equal(false);
+      expect($item.hasClass("isActive")).to.equal(false);
     });
   });
 
@@ -63,7 +63,7 @@ describe("<Navbar />", () => {
     cy.get('[data-test-id="navbar-space-dot"]').should("exist");
     cy.get("[data-test-id='clock-icon']")
       .invoke("attr", "class")
-      .should("contain", "active");
+      .should("contain", "isActive");
   });
 
   it("should fire an event and change active items on consecutive clicks", () => {
@@ -83,8 +83,8 @@ describe("<Navbar />", () => {
       </Navbar>
     );
 
-    cy.get(".spot .dot").should("not.exist");
-    cy.get('[data-test-id="clock-icon"]').should("not.have.class", "active");
+    cy.get('[data-test-id="navbar-space-dot"]').should("not.exist");
+    cy.get('[data-test-id="clock-icon"]').should("not.have.class", "isActive");
 
     cy.get("button").first().click();
 
@@ -92,7 +92,7 @@ describe("<Navbar />", () => {
     cy.get("[data-test-id='navbar-space-dot']").should("exist");
     cy.get("[data-test-id='clock-icon']")
       .invoke("attr", "class")
-      .should("contain", "active");
+      .should("contain", "isActive");
 
     cy.percySnapshot("first item active");
 
@@ -100,7 +100,7 @@ describe("<Navbar />", () => {
 
     cy.get("[data-test-id='user-icon']")
       .invoke("attr", "class")
-      .should("contain", "active");
+      .should("contain", "isActive");
 
     cy.percySnapshot("last item active");
   });
