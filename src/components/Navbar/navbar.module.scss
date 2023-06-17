@@ -1,10 +1,20 @@
+$navbar-width: var(--navbar-width, 480px);
+
+$light-background: var(--light-background, #fff);
+$light-text: var(--light-text, #000);
+
+$dark-background: var(--dark-background, #000);
+$dark-text: var(--dark-text, #fff);
+
+$primary: var(--primary, #4c21ea);
+
 .navbar {
-  width: calc(var(--navbar-width));
+  width: calc($navbar-width);
   position: relative;
   &List {
-    background-color: var(--light-background);
+    background-color: $light-background;
     border-radius: 10px;
-    color: var(--light-text);
+    color: $light-text;
     display: flex;
     height: 80px;
     margin: 0;
@@ -14,7 +24,7 @@
   &Space {
     position: absolute;
     bottom: 0px;
-    width: var(--navbar-width);
+    width: $navbar-width;
     &Spot {
       transform: translateX(calc(100% * var(--navbar-item-active)));
       width: calc(100% / var(--navbar-items));
@@ -36,8 +46,8 @@
 
 @media (prefers-color-scheme: dark) {
   .navbarList {
-    background-color: var(--dark-background);
-    color: var(--dark-text);
+    background-color: $dark-background;
+    color: $dark-text;
   }
 }
 
@@ -73,13 +83,13 @@
   }
   &Icon {
     transform-origin: bottom left;
-    color: var(--dark-background);
+    color: $dark-background;
     @media (prefers-color-scheme: dark) {
-      color: var(--light-background);
+      color: $light-background;
     }
     &.isActive {
       animation: none;
-      color: var(--primary);
+      color: $primary;
       @media (prefers-reduced-motion: no-preference) {
         animation: jump 0.5s;
       }
@@ -91,7 +101,7 @@
     position: relative;
   }
   &IconOverlay {
-    background-color: var(--light-background);
+    background-color: $light-background;
     top: 0;
     height: 100%;
     mix-blend-mode: color;
@@ -121,15 +131,15 @@
     }
   }
   &Text {
-    color: var(--light-text);
+    color: $light-text;
   }
 }
 
 @media (prefers-color-scheme: dark) {
   .navbarItemIconOverlay {
-    background-color: var(--dark-background);
+    background-color: $dark-background;
   }
   .navbarItemTitleText {
-    color: var(--dark-text);
+    color: $dark-text;
   }
 }

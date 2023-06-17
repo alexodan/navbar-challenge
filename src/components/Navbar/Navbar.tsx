@@ -24,24 +24,23 @@ const NavbarContext = React.createContext<{
   unRegisterItem?: (item: React.RefObject<HTMLLIElement>) => void;
 }>({});
 
+type NavbarItemCommonProps<T extends string> = {
+  icon: IconDefinition;
+  title: T;
+  onSelect: ({ title, id }: { title: T; id?: number }) => void;
+  id?: number;
+  iconStyles?: React.CSSProperties;
+};
+
 type NavbarItemProps<T extends string> =
-  | {
+  | ({
       as: "a";
       href: string;
-      icon: IconDefinition;
-      title: T;
-      onSelect: ({ title, id }: { title: T; id?: number }) => void;
-      id?: number;
-      iconStyles?: React.CSSProperties;
-    }
-  | {
+    } & NavbarItemCommonProps<T>)
+  | ({
       as: "button";
-      icon: IconDefinition;
-      title: T;
-      onSelect: ({ title, id }: { title: T; id?: number }) => void;
-      id?: number;
-      iconStyles?: React.CSSProperties;
-    };
+      href?: never;
+    } & NavbarItemCommonProps<T>);
 
 export function NavbarItem<T extends string>({
   as: Comp,
@@ -107,7 +106,12 @@ type NavbarProps = {
   style?: React.CSSProperties;
 };
 
-export function Navbar({ label, children, defaultActive, style: userStyles }: NavbarProps) {
+export function Navbar({
+  label,
+  children,
+  defaultActive,
+  style: userStyles,
+}: NavbarProps) {
   const [activeId, setActiveId] = useState<number>();
   const [items, setItems] = useState<React.RefObject<HTMLLIElement>[]>([]);
 
@@ -177,7 +181,7 @@ export function Navbar({ label, children, defaultActive, style: userStyles }: Na
 }
 
 Navbar.defaultProps = {
-  label: 'Navbar',
-}
+  label: "Navbar",
+};
 
 export default Navbar;
