@@ -18,7 +18,7 @@ In order to run it local, follow these steps:
 
 - `npm install`
 - `npm run dev`
-- To test using cypress `npm run cypress:open` for interactive mode or `npm run cypress:run` for headless
+- To test using cypress `npm run cypress:open` for interactive mode or `npm run cypress:run:component` for headless
 
 ### Variables for style override
 

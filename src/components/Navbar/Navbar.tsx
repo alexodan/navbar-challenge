@@ -56,7 +56,7 @@ export function NavbarItem<T extends string>({
   const itemRef = useRef<HTMLLIElement>(null);
 
   const handleClick = () => {
-    if (id && id !== activeId) {
+    if (id !== undefined && id !== activeId) {
       setActiveId?.(id);
       onSelect({ title, id });
     }
