@@ -27,7 +27,7 @@ const NavbarContext = React.createContext<{
 type NavbarItemCommonProps<T extends string> = {
   icon: IconDefinition;
   title: T;
-  onSelect: ({ title, id }: { title: T; id?: number }) => void;
+  onSelect: ({ title, id }: { title: T; id: number }) => void;
   id?: number;
   iconStyles?: React.CSSProperties;
 };
@@ -56,7 +56,7 @@ export function NavbarItem<T extends string>({
   const itemRef = useRef<HTMLLIElement>(null);
 
   const handleClick = () => {
-    if (id !== activeId) {
+    if (id && id !== activeId) {
       setActiveId?.(id);
       onSelect({ title, id });
     }
@@ -97,7 +97,12 @@ export function NavbarItem<T extends string>({
 }
 
 // Note: check eslint rule "react/require-default-props"
-NavbarItem.defaultProps = { as: "button" };
+NavbarItem.defaultProps = {
+  as: "button",
+  iconStyles: {
+    fontSize: "30px",
+  },
+};
 
 type NavbarProps = {
   label: string;

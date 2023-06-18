@@ -1,4 +1,5 @@
 $navbar-width: var(--navbar-width, 480px);
+$dot-size: var(--navbar-dot-size, 12px);
 
 $light-background: var(--light-background, #fff);
 $light-text: var(--light-text, #000);
@@ -35,11 +36,11 @@ $primary: var(--primary, #4c21ea);
     &Dot {
       background-color: #1bbcf6;
       border-radius: 50%;
-      height: 12px;
+      bottom: 15px;
+      height: $dot-size;
       left: calc(50% - 6px);
       position: absolute;
-      bottom: 15px;
-      width: 12px;
+      width: $dot-size;
     }
   }
 }

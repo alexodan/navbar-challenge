@@ -39,7 +39,7 @@ const tabContentLookup = {
 function App() {
   const [activeTab, setActiveTab] = useState<Tab>(initialItems[0].title);
 
-  const handleItemClicked = ({ title, id }: { title: Tab; id?: number }) => {
+  const handleItemClicked = ({ title, id }: { title: Tab; id: number }) => {
     console.log(`Item clicked title ${title} id ${id}`);
     setActiveTab(title);
   };
@@ -51,7 +51,6 @@ function App() {
           <NavbarItem
             key={`${item.title}-${i}`}
             icon={item.icon}
-            iconStyles={{ fontSize: "30px" }}
             title={item.title}
             onSelect={handleItemClicked}
           />

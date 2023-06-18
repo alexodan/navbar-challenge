@@ -14,14 +14,37 @@ https://dribbble.com/shots/5487895-Tab-bar-active-animation/attachments/10896293
 
 ## Setup
 
-- Steps on how to install, run, and test. (don't forget to document the Percy key!)
+In order to run it local, follow these steps:
+
+- `npm install`
+- `npm run dev`
+- To test using cypress `npm run cypress:open` for interactive mode or `npm run cypress:run` for headless
+
+### Variables for style override
+
+You can override the default styles providing variables with your own values:
+
+```css
+:root {
+  --navbar-width: 480px;
+  --navbar-dot-size: 12px;
+
+  --light-background: #fff;
+  --light-text: #000;
+
+  --dark-background: #000;
+  --dark-text: #fff;
+
+  --primary: #4c21ea;
+}
+```
 
 ## Features
 
 - 🌑 / ☀️ Dark and Light theme
 - 🧱 Reusable
 - 📷 Automated visual tests with Cypress & Percy
-- ♿️ Motion a11y approach
+- ♿️ Reduced motion for A11Y [(see more)](https://www.tatianamac.com/posts/prefers-reduced-motion)
 - 📑 Storybook docs
 
 ## Tooling
@@ -34,7 +57,7 @@ https://dribbble.com/shots/5487895-Tab-bar-active-animation/attachments/10896293
 
 ## Usage:
 
-A small code snippet of its used.
+A small code snippet of its usage:
 
 ```jsx
 import Navbar, { NavbarItem } from "./components/Navbar";
@@ -54,7 +77,7 @@ type Tab = (typeof initialItems)[number]["title"];
 function App() {
   const [activeTab, setActiveTab] = useState<Tab>(initialItems[0].title);
 
-  const handleItemClicked = ({ title, id }: { title: Tab; id?: number }) => {
+  const handleItemClicked = ({ title, id }: { title: Tab; id: number }) => {
     console.log(`Item clicked title ${title} id ${id}`);
     setActiveTab(title);
   };
@@ -66,7 +89,6 @@ function App() {
           <NavbarItem
             key={`${item.title}-${i}`}
             icon={item.icon}
-            iconStyles={{ fontSize: "30px" }}
             title={item.title}
             onSelect={handleItemClicked}
           />
