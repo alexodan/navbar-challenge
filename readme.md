@@ -2,7 +2,7 @@
 
 ## Site
 
-Hosted using github pages [here](https://pages.github.com/)
+A demo is hosted using github pages [here](https://alexodan.github.io/navbar-challenge/)
 
 ## About
 
@@ -19,6 +19,8 @@ In order to run it local, follow these steps:
 - `npm install`
 - `npm run dev`
 - To test using cypress `npm run cypress:open` for interactive mode or `npm run cypress:run:component` for headless
+
+To setup Percy this guide https://docs.percy.io/docs/cypress#setup
 
 ### Variables for style override
 
