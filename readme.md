@@ -2,7 +2,7 @@
 
 ## Site
 
-A demo is hosted using github pages [here](https://alexodan.github.io/navbar-challenge/)
+Checkout the [demo page](https://alexodan.github.io/navbar-challenge/).
 
 ## About
 
