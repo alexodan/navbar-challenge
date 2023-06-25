@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "types": ["cypress", "@percy/cypress"],
     "target": "ESNext",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "module": "ESNext",
@@ -19,6 +20,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
+  "include": ["./src", "cypress.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

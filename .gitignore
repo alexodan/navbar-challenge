@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 
 template.md
+
+cypress/videos
+.env

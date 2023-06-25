@@ -1,12 +1,26 @@
-@import "./variables.scss";
+:root {
+  --navbar-width: 480px;
+
+  --body-light-background: #eee;
+  --body-dark-background: #111;
+
+  --light-background: #fff;
+  --light-text: #000;
+
+  --dark-background: #000;
+  --dark-text: #fff;
+
+  --primary: #4c21ea;
+}
 
 body {
-  background-color: $light-background;
+  background-color: var(--body-light-background);
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
   body {
-    background-color: $dark-background;
-    color: $dark-text;
+    background-color: var(--body-dark-background);
+    color: var(--dark-text);
   }
 }
