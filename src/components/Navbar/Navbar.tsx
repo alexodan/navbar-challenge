@@ -9,10 +9,10 @@ import { IconDefinition } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ThemeProvider } from "../../theme";
 import { isNavbarItem } from "./Navbar.utils";
-import { isDev } from "../../utils";
 import useDotAnimation from "./Navbar.hooks";
 import styles from "./navbar.module.scss";
 import classNames from "classnames/bind";
+import { isDev } from "../../utils";
 
 const cx = classNames.bind(styles);
 
@@ -32,7 +32,7 @@ type NavbarItemCommonProps<T extends string> = {
   iconStyles?: React.CSSProperties;
 };
 
-type NavbarItemProps<T extends string> =
+export type NavbarItemProps<T extends string> =
   | ({
       as: "a";
       href: string;
@@ -104,7 +104,7 @@ NavbarItem.defaultProps = {
   },
 };
 
-type NavbarProps = {
+export type NavbarProps = {
   label: string;
   children: React.ReactNode;
   defaultActive?: number;

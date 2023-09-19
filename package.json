@@ -1,9 +1,25 @@
 {
+  "author": "@alexodan",
+  "description": "A simple navbar component for React.",
   "homepage": "http://alexodan.github.io/navbar-challenge",
   "name": "navbar-challenge",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
+  "typings": "dist/navbar",
+  "files": [
+    "dist",
+    "readme.md"
+  ],
+  "main": "./dist/navbar.umd.js",
+  "module": "./dist/navbar.es.js",
+  "types": "dist",
+  "exports": {
+    ".": {
+      "import": "./dist/navbar.es.js",
+      "require": "./dist/navbar.umd.js"
+    }
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -29,6 +45,7 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.26.2",
     "@percy/cli": "^1.26.0",
     "@percy/cypress": "^3.1.2",
     "@storybook/addon-essentials": "^7.0.12",
