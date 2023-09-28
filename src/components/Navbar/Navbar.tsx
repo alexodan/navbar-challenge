@@ -1,108 +1,17 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import { IconDefinition } from "@fortawesome/free-regular-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useCallback, useEffect, useState } from "react";
 import { ThemeProvider } from "../../theme";
 import { isNavbarItem } from "./Navbar.utils";
 import useDotAnimation from "./Navbar.hooks";
 import styles from "./navbar.module.scss";
-import classNames from "classnames/bind";
 import { isDev } from "../../utils";
 
-const cx = classNames.bind(styles);
-
-const NavbarContext = React.createContext<{
+export const NavbarContext = React.createContext<{
   items?: React.RefObject<HTMLLIElement>[];
   activeId?: number;
   setActiveId?: (id?: number) => void;
   registerItem?: (item: React.RefObject<HTMLLIElement>) => void;
   unRegisterItem?: (item: React.RefObject<HTMLLIElement>) => void;
 }>({});
-
-type NavbarItemCommonProps<T extends string> = {
-  icon: IconDefinition;
-  title: T;
-  onSelect: ({ title, id }: { title: T; id: number }) => void;
-  id?: number;
-  iconStyles?: React.CSSProperties;
-};
-
-export type NavbarItemProps<T extends string> =
-  | ({
-      as: "a";
-      href: string;
-    } & NavbarItemCommonProps<T>)
-  | ({
-      as: "button";
-      href?: never;
-    } & NavbarItemCommonProps<T>);
-
-export function NavbarItem<T extends string>({
-  as: Comp,
-  icon,
-  title,
-  onSelect,
-  id,
-  iconStyles,
-  ...props
-}: NavbarItemProps<T>) {
-  const { activeId, setActiveId, registerItem, unRegisterItem } =
-    useContext(NavbarContext);
-  const itemRef = useRef<HTMLLIElement>(null);
-
-  const handleClick = () => {
-    if (id !== undefined && id !== activeId) {
-      setActiveId?.(id);
-      onSelect({ title, id });
-    }
-  };
-
-  useEffect(() => {
-    registerItem?.(itemRef);
-    return () => unRegisterItem?.(itemRef);
-  }, [registerItem, unRegisterItem]);
-
-  const isActive = id === activeId;
-
-  const additionalProps =
-    Comp === "a" && "href" in props ? { href: props.href } : {};
-
-  return (
-    <li className={styles.navbarItem} ref={itemRef}>
-      <Comp
-        {...additionalProps}
-        onClick={handleClick}
-        className={styles.navbarItemBtn}
-      >
-        <span className={styles.navbarItemIconContainer}>
-          <FontAwesomeIcon
-            data-test-id={`${icon.iconName}-icon`}
-            className={cx("navbarItemIcon", { isActive })}
-            style={iconStyles}
-            icon={icon}
-          />
-          <div className={cx("navbarItemIconOverlay", { isActive })} />
-        </span>
-        <div className={cx("navbarItemTitle", { isActive })}>
-          <span className={styles.navbarItemTitleText}>{title}</span>
-        </div>
-      </Comp>
-    </li>
-  );
-}
-
-// Note: check eslint rule "react/require-default-props"
-NavbarItem.defaultProps = {
-  as: "button",
-  iconStyles: {
-    fontSize: "30px",
-  },
-};
 
 export type NavbarProps = {
   label: string;
@@ -111,7 +20,7 @@ export type NavbarProps = {
   style?: React.CSSProperties;
 };
 
-export function Navbar({
+export default function Navbar({
   label,
   children,
   defaultActive,
@@ -188,5 +97,3 @@ export function Navbar({
 Navbar.defaultProps = {
   label: "Navbar",
 };
-
-export default Navbar;

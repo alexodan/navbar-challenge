@@ -1,4 +1,5 @@
-import Navbar, { NavbarItem } from "./Navbar";
+import Navbar from "./Navbar";
+import NavbarItem from "./NavbarItem";
 import {
   faClock,
   faCompass,

@@ -6,14 +6,13 @@
   "private": true,
   "version": "0.0.1",
   "type": "module",
-  "typings": "dist/navbar",
   "files": [
     "dist",
     "readme.md"
   ],
   "main": "./dist/navbar.umd.js",
   "module": "./dist/navbar.es.js",
-  "types": "dist",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/navbar.es.js",
@@ -56,6 +55,7 @@
     "@storybook/react-vite": "^7.0.12",
     "@storybook/testing-library": "^0.0.14-next.2",
     "@types/jest": "^29.5.1",
+    "@types/node": "^20.7.1",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
     "@types/styled-components": "^5.1.26",
@@ -74,6 +74,7 @@
     "storybook": "^7.0.12",
     "styled-components": "^5.3.10",
     "typescript": "^5.1.3",
-    "vite": "^4.3.2"
+    "vite": "^4.3.2",
+    "vite-plugin-dts": "^3.6.0"
   }
 }

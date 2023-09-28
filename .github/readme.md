@@ -62,7 +62,7 @@ You can override the default styles providing variables with your own values:
 A small code snippet of its usage:
 
 ```jsx
-import Navbar, { NavbarItem } from "./components/Navbar";
+import Navbar from "./components/Navbar";
 import { faClock, ... } from "@fortawesome/free-solid-svg-icons";
 import "./app.scss";
 import { useState } from "react";

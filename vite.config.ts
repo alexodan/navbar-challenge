@@ -1,6 +1,7 @@
 import path from "path";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import dts from "vite-plugin-dts";
 
 export default defineConfig({
   build: {
@@ -9,14 +10,6 @@ export default defineConfig({
       name: "alexodan-navbar",
       fileName: (format) => `navbar.${format}.js`,
     },
-    rollupOptions: {
-      external: ["react", "react-dom"],
-      output: {
-        globals: {
-          react: "React",
-        },
-      },
-    },
   },
-  plugins: [react()],
+  plugins: [react(), dts()],
 });

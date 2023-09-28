@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import Navbar, { NavbarItem } from ".";
+import Navbar from ".";
+import NavbarItem from "./NavbarItem";
 import {
   faClock,
   faCompass,
