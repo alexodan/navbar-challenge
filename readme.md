@@ -114,7 +114,11 @@ export default App;
 
 - There are CSS props that are not animatable, like display. I was, at first, trying to use it to animate the fading of the NavbarItem text and the selected icon, then switched it to use opacity.
 
+<<<<<<< HEAD
 - Testing with Cypress and CSS modules can get a bit tricky, the classes are dynamic so you can't do things like cy.get('[data-testid="clock-icon"]').should("have.class", "active");, because you get \_active_a123as or something like that instead. You have to choose between dataset or custom attributes and get creative, How to deal with dynamic class names à la CSS Modules or Styled Components? cypress-io/cypress#1212. It is possible also to strip the data-test-id attributes with a babel plugin https://github.com/coderas/babel-plugin-jsx-remove-data-test-id.
+=======
+- Testing with Cypress and CSS modules can get a bit tricky, the classes are dynamic so you can't do things like cy.get('[data-testid="clock-icon"]').should("have.class", "active");, because you get _active_a123as or something like that instead. You have to choose between dataset or custom attributes and get creative, How to deal with dynamic class names à la CSS Modules or Styled Components? cypress-io/cypress#1212. It is possible also to strip the data-test-id attributes with a babel plugin https://github.com/coderas/babel-plugin-jsx-remove-data-test-id.
+>>>>>>> main
 
 - A bunch of learning of accessibility, what a huge topic. Animations can be disabled from the OS, since people can feel dizzy by looking at them, among other things, so there is a media query that can be used to set the animations only if the user allow them @media (prefers-reduced-motion: reduce), more info https://www.tatianamac.com/posts/prefers-reduced-motion.
 
