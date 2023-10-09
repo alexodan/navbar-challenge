@@ -17,6 +17,7 @@ https://dribbble.com/shots/5487895-Tab-bar-active-animation/attachments/10896293
 In order to run it local, follow these steps:
 
 - `npm install`
+- `npm run panda`
 - `npm run dev`
 - To test using cypress `npm run cypress:open` for interactive mode or `npm run cypress:run:component` for headless
 
