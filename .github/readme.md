@@ -1,4 +1,4 @@
-# Navbar challenge
+# A simple navbar
 
 ## Site
 
